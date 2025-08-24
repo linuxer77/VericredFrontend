@@ -141,66 +141,69 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-black text-white scroll-smooth">
       {/* Navbar */}
-      <header className="sticky top-0 z-50 border-b border-gray-800/80 backdrop-blur supports-[backdrop-filter]:bg-black/30">
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16">
-          <div className="flex justify-between items-center h-full">
-            {/* Logo */}
-            <a href="#home" className="group">
-              <Logo
-                size="md"
-                className="group-hover:scale-105 transition-transform duration-200"
-              />
-            </a>
+      <header className="sticky top-0 z-50 border-b border-white/10 backdrop-blur supports-[backdrop-filter]:bg-black/30">
+        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center">
+          {/* Glass, rounded pill container */}
+          <div className="w-full rounded-full border border-white/10 bg-white/5 backdrop-blur-md shadow-[0_0_1px_1px_rgba(255,255,255,0.05)] px-3 md:px-4 py-2">
+            <div className="flex justify-between items-center gap-3">
+              {/* Logo */}
+              <a href="#home" className="group flex items-center">
+                <Logo
+                  size="md"
+                  className="group-hover:scale-105 transition-transform duration-200"
+                />
+              </a>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-1">
-              {navItems.map((item) => (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  className="px-3 py-2 text-sm text-gray-300 hover:text-white rounded-md hover:bg-gray-800 transition-colors"
+              {/* Desktop Navigation */}
+              <div className="hidden md:flex items-center gap-1">
+                {navItems.map((item) => (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    className="px-4 py-2 text-sm text-gray-300 hover:text-white rounded-full hover:bg-white/10 transition-all"
+                  >
+                    {item.label}
+                  </a>
+                ))}
+                <Button
+                  onClick={handleMetaMaskConnect}
+                  disabled={isConnecting}
+                  className="ml-2 bg-gradient-to-r from-white to-gray-200 text-black hover:from-gray-100 hover:to-white shadow-sm"
                 >
-                  {item.label}
-                </a>
-              ))}
-              <Button
-                onClick={handleMetaMaskConnect}
-                disabled={isConnecting}
-                className="ml-3 bg-white text-black hover:bg-gray-100"
-              >
-                <Wallet className="mr-2 h-4 w-4" />
-                {isConnecting ? "Connecting..." : "Login with MetaMask"}
-              </Button>
-            </div>
+                  <Wallet className="mr-2 h-4 w-4" />
+                  {isConnecting ? "Connecting..." : "Login with MetaMask"}
+                </Button>
+              </div>
 
-            {/* Mobile menu button */}
-            <div className="md:hidden">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-gray-400 hover:text-white"
-                aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-              >
-                {isMenuOpen ? (
-                  <X className="h-6 w-6" />
-                ) : (
-                  <Menu className="h-6 w-6" />
-                )}
-              </Button>
+              {/* Mobile menu button */}
+              <div className="md:hidden">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  className="text-gray-300 hover:text-white hover:bg-white/10 rounded-full"
+                  aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+                >
+                  {isMenuOpen ? (
+                    <X className="h-6 w-6" />
+                  ) : (
+                    <Menu className="h-6 w-6" />
+                  )}
+                </Button>
+              </div>
             </div>
           </div>
         </nav>
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden border-t border-gray-800 bg-black">
-            <div className="px-2 py-2 space-y-1">
+          <div className="md:hidden border-t border-white/10 bg-black/70 backdrop-blur-md">
+            <div className="px-3 py-3 space-y-2">
               {navItems.map((item) => (
                 <a
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsMenuOpen(false)}
-                  className="block px-3 py-2 text-base font-medium text-gray-300 hover:text-white hover:bg-gray-800 rounded-md transition-colors"
+                  className="block px-4 py-3 text-base font-medium text-gray-200 hover:text-white bg-white/5 hover:bg-white/10 rounded-xl border border-white/10 transition-all"
                 >
                   {item.label}
                 </a>
@@ -208,7 +211,7 @@ export default function LandingPage() {
               <Button
                 onClick={handleMetaMaskConnect}
                 disabled={isConnecting}
-                className="w-full h-12 bg-white text-black hover:bg-gray-100"
+                className="w-full h-12 bg-gradient-to-r from-white to-gray-200 text-black hover:from-gray-100 hover:to-white shadow-sm"
               >
                 <Wallet className="mr-3 h-5 w-5" />
                 {isConnecting ? "Connecting..." : "Login with MetaMask"}

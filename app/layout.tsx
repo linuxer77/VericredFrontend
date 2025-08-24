@@ -11,6 +11,12 @@ export const metadata: Metadata = {
   description:
     "A decentralized platform for verified academic and professional credentials on-chain",
   generator: "VeriCred",
+  // Add SVG favicon for the tab icon
+  icons: {
+    icon: "/placeholder-logo.svg",
+    shortcut: "/placeholder-logo.svg",
+    apple: "/placeholder-logo.svg",
+  },
 };
 
 export default function RootLayout({
