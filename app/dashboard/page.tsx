@@ -503,22 +503,6 @@ export default function StudentDashboard() {
                           {userProfile.role}
                         </Badge>
                       </div>
-
-                      {/* Fetched Dashboard JSON */}
-                      <Separator className="bg-gray-800" />
-                      <div className="space-y-2">
-                        <div className="text-sm font-medium text-white">
-                          Fetched Profile JSON
-                        </div>
-                        {dashboardError && (
-                          <div className="text-xs text-red-300">
-                            {dashboardError}
-                          </div>
-                        )}
-                        <pre className="max-h-64 overflow-auto rounded-md bg-black/40 border border-gray-800 p-3 text-xs text-gray-200">
-                          {JSON.stringify(dashboardData, null, 2) || "{}"}
-                        </pre>
-                      </div>
                     </CardContent>
                   </Card>
                 </motion.div>
