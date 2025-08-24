@@ -9,7 +9,6 @@ import {
   Building2,
   Users,
   Award,
-  Settings,
   LogOut,
   Shield,
   TrendingUp,
@@ -23,7 +22,6 @@ import {
 } from "lucide-react";
 import UniversityProfile from "@/components/university-profile";
 import StudentManagement from "@/components/student-management";
-import UniversitySettings from "@/components/university-settings";
 import MintCredentialModal from "@/components/mint-credential-modal";
 import AuthGuard from "@/components/auth/auth-guard";
 import { motion } from "framer-motion";
@@ -688,36 +686,30 @@ export default function UniversityDashboard() {
               className="space-y-6"
             >
               {/* Navigation Tabs */}
-              <TabsList className="grid w-full grid-cols-4 bg-gray-900/80 border border-gray-800 backdrop-blur-sm p-1">
+              <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 gap-1 bg-gray-900/80 border border-gray-800 backdrop-blur-sm p-1">
                 <TabsTrigger
                   value="dashboard"
-                  className="flex items-center gap-2 data-[state=active]:bg-purple-900/30 data-[state=active]:text-purple-300 data-[state=active]:border-purple-700 text-gray-400 transition-all duration-200 hover:text-white"
+                  className="flex items-center justify-center gap-2 text-xs sm:text-sm data-[state=active]:bg-purple-900/30 data-[state=active]:text-purple-300 data-[state=active]:border-purple-700 text-gray-400 transition-all duration-200 hover:text-white px-2 py-2"
                 >
                   <Building2 className="h-4 w-4" />
-                  Dashboard
+                  <span>Dashboard</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="students"
-                  className="flex items-center gap-2 data-[state=active]:bg-purple-900/30 data-[state=active]:text-purple-300 data-[state=active]:border-purple-700 text-gray-400 transition-all duration-200 hover:text-white"
+                  className="flex items-center justify-center gap-2 text-xs sm:text-sm data-[state=active]:bg-purple-900/30 data-[state=active]:text-purple-300 data-[state=active]:border-purple-700 text-gray-400 transition-all duration-200 hover:text-white px-2 py-2"
                 >
                   <Users className="h-4 w-4" />
-                  Students
-                </TabsTrigger>
-                <TabsTrigger
-                  value="settings"
-                  className="flex items-center gap-2 data-[state=active]:bg-purple-900/30 data-[state=active]:text-purple-300 data-[state=active]:border-purple-700 text-gray-400 transition-all duration-200 hover:text-white"
-                >
-                  <Settings className="h-4 w-4" />
-                  Settings
+                  <span>Students</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="pending"
-                  className="flex items-center gap-2 data-[state=active]:bg-purple-900/30 data-[state=active]:text-purple-300 data-[state=active]:border-purple-700 text-gray-400 transition-all duration-200 hover:text-white"
+                  className="flex items-center justify-center gap-2 text-xs sm:text-sm data-[state=active]:bg-purple-900/30 data-[state=active]:text-purple-300 data-[state=active]:border-purple-700 text-gray-400 transition-all duration-200 hover:text-white px-2 py-2"
                 >
                   <ListChecks className="h-4 w-4" />
-                  Pending Requests
+                  <span className="inline sm:hidden">Pending</span>
+                  <span className="hidden sm:inline">Pending Requests</span>
                   {pendingRequests.length > 0 && (
-                    <span className="ml-2 inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-yellow-900/40 text-yellow-300 text-xs">
+                    <span className="ml-1 sm:ml-2 inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-yellow-900/40 text-yellow-300 text-[10px] sm:text-xs">
                       {pendingRequests.length}
                     </span>
                   )}
@@ -893,14 +885,6 @@ export default function UniversityDashboard() {
                     )}
                   </CardContent>
                 </Card>
-              </TabsContent>
-
-              {/* Settings */}
-              <TabsContent value="settings">
-                <UniversitySettings
-                  university={university}
-                  setUniversity={setUniversity}
-                />
               </TabsContent>
             </Tabs>
           )}
