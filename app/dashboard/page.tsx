@@ -227,20 +227,15 @@ export default function StudentDashboard() {
         const headers: Record<string, string> = {
           "Content-Type": "application/json",
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          ...(addr ? { "x-metamask-address": String(addr) } : {}),
         };
 
-        const base =
+        const url =
           "https://erired-harshitg7062-82spdej3.leapcell.dev/dashboard";
-        const url = new URL(base);
-        if (addr) {
-          url.searchParams.set("metamaskAddress", String(addr));
-          url.searchParams.set("metamask_address", String(addr));
-        }
 
-        const res = await fetch(url.toString(), {
+        const res = await fetch(url, {
           method: "GET",
           headers,
+          body: JSON.stringify({ metamaskAddress: addr || "" }),
         });
         const text = await res.text();
         const json = text
