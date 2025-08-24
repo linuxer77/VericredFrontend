@@ -278,35 +278,46 @@ export default function StudentDashboard() {
     return (
       <AuthGuard>
         <WalletGuard>
-          <div className="min-h-screen bg-black text-white flex items-center justify-center px-4">
-            <Card className="w-full max-w-xl bg-gray-900 border-gray-800">
-              <CardHeader>
-                <CardTitle className="text-white">
-                  No Student Account Found
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-gray-300">
-                  We couldn’t find a student profile associated with your
-                  wallet. Please create your student account to continue.
-                </p>
-                <div className="flex flex-wrap gap-3">
-                  <Button
-                    className="bg-white text-black hover:bg-gray-100"
-                    onClick={() => (window.location.href = "/home")}
-                  >
-                    Create Student Account
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white"
-                    onClick={() => (window.location.href = "/home")}
-                  >
-                    Go to Home
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+          <div className="min-h-screen bg-black text-white flex items-center justify-center mb-6 px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 10, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="w-full max-w-xl"
+            >
+              <Card className="bg-gradient-to-br from-gray-900/90 via-black/80 to-purple-900/20 border border-gray-800/60 backdrop-blur-xl shadow-2xl">
+                <CardHeader className="text-center">
+                  <div className="mx-auto mb-3 w-12 h-12 rounded-2xl bg-purple-600/20 border border-purple-700/40 flex items-center justify-center">
+                    <GraduationCap className="h-6 w-6 text-purple-300" />
+                  </div>
+                  <CardTitle className="text-white text-xl">
+                    No Student Account Found
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-5 text-center">
+                  <p className="text-gray-300">
+                    We couldn’t find a student account linked to your profile.
+                    To access your dashboard and view credentials, please create
+                    your student account first.
+                  </p>
+                  <div className="flex flex-wrap items-center justify-center gap-3">
+                    <Button
+                      className="bg-white text-black hover:bg-gray-100"
+                      onClick={() => (window.location.href = "/home")}
+                    >
+                      Create Student Account
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white"
+                      onClick={() => (window.location.href = "/home")}
+                    >
+                      Go to Home
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
           </div>
         </WalletGuard>
       </AuthGuard>
