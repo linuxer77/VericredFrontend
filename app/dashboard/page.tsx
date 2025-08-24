@@ -60,6 +60,9 @@ export default function StudentDashboard() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   // New: track 404 state
   const [notFound, setNotFound] = useState(false);
+  // New: dashboard API response data to display
+  const [dashboardData, setDashboardData] = useState<any | null>(null);
+  const [dashboardError, setDashboardError] = useState<string | null>(null);
 
   useEffect(() => {
     const init = async () => {
@@ -205,6 +208,44 @@ export default function StudentDashboard() {
     setMintedCredentials([]);
     window.location.href = "/";
   };
+
+  // Always fetch /dashboard on visit and show JSON in Profile Summary
+  useEffect(() => {
+    (async () => {
+      try {
+        setDashboardError(null);
+        const token = getStoredToken();
+        const headers: Record<string, string> = {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        };
+        const res = await fetch(
+          "https://erired-harshitg7062-82spdej3.leapcell.dev/dashboard",
+          {
+            method: "GET",
+            headers,
+          }
+        );
+        const text = await res.text();
+        const json = text
+          ? (() => {
+              try {
+                return JSON.parse(text);
+              } catch {
+                return { raw: text };
+              }
+            })()
+          : {};
+        if (!res.ok) {
+          setDashboardError(`Dashboard fetch failed (${res.status})`);
+        }
+        setDashboardData(json);
+      } catch (e: any) {
+        setDashboardError(e?.message || "Failed to fetch dashboard");
+        setDashboardData(null);
+      }
+    })();
+  }, []);
 
   if (profileLoading) {
     return (
@@ -460,6 +501,22 @@ export default function StudentDashboard() {
                         >
                           {userProfile.role}
                         </Badge>
+                      </div>
+
+                      {/* Fetched Dashboard JSON */}
+                      <Separator className="bg-gray-800" />
+                      <div className="space-y-2">
+                        <div className="text-sm font-medium text-white">
+                          Fetched Profile JSON
+                        </div>
+                        {dashboardError && (
+                          <div className="text-xs text-red-300">
+                            {dashboardError}
+                          </div>
+                        )}
+                        <pre className="max-h-64 overflow-auto rounded-md bg-black/40 border border-gray-800 p-3 text-xs text-gray-200">
+                          {JSON.stringify(dashboardData, null, 2) || "{}"}
+                        </pre>
                       </div>
                     </CardContent>
                   </Card>
