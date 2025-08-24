@@ -122,6 +122,16 @@ export default function UniversityDashboard() {
   const [copiedWallet, setCopiedWallet] = useState<string | null>(null);
   const { showToast } = useToast();
 
+  // Helper to copy wallet addresses in Pending list
+  const copyWallet = async (addr?: string) => {
+    if (!addr) return;
+    try {
+      await navigator.clipboard.writeText(addr);
+      setCopiedWallet(addr);
+      setTimeout(() => setCopiedWallet(null), 1200);
+    } catch {}
+  };
+
   // Set client state after mount
   useEffect(() => {
     setIsClient(true);
