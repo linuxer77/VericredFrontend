@@ -831,22 +831,22 @@ export default function UniversityDashboard() {
                           return (
                             <div
                               key={req.id || wallet || idx}
-                              className="flex items-center justify-between p-4 bg-gray-800/50 rounded-lg border border-gray-700"
+                              className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-4 bg-gray-800/50 rounded-lg border border-gray-700"
                             >
-                              <div>
-                                <p className="text-white font-medium">
+                              <div className="min-w-0">
+                                <p className="text-white font-medium text-sm sm:text-base">
                                   Student Wallet
                                 </p>
-                                <p className="font-mono text-sm text-gray-400">
+                                <p className="font-mono text-xs sm:text-sm text-gray-300 break-all">
                                   {wallet || "—"}
                                 </p>
-                                <p className="text-xs text-gray-500 mt-1">
+                                <p className="text-[11px] sm:text-xs text-gray-500 mt-1 break-all">
                                   University: {uniWallet || "—"}
                                 </p>
                               </div>
-                              <div className="flex items-center gap-2">
+                              <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
                                 <Button
-                                  className="bg-white text-black hover:bg-gray-100"
+                                  className="bg-white text-black hover:bg-gray-100 w-full sm:w-auto"
                                   onClick={() => {
                                     if (!wallet) {
                                       alert(

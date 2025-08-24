@@ -351,7 +351,7 @@ export default function MintCredentialModal({
 
   return (
     <div
-      className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-2 sm:p-4"
       onClick={closeModal}
     >
       <div
@@ -412,7 +412,7 @@ export default function MintCredentialModal({
         </div>
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto flex-1">
+        <div className="p-4 sm:p-6 overflow-y-auto flex-1">
           <Tabs
             value={activeTab}
             onValueChange={setActiveTab}
@@ -421,30 +421,30 @@ export default function MintCredentialModal({
             <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 bg-gray-800 border border-gray-700">
               <TabsTrigger
                 value="basic"
-                className="data-[state=active]:bg-gray-700 data-[state=active]:text-white text-gray-400"
+                className="data-[state=active]:bg-gray-700 data-[state=active]:text-white text-gray-400 text-xs sm:text-sm px-2 py-2 whitespace-normal leading-tight text-center"
               >
-                <FileText className="h-4 w-4 mr-2" />
+                <FileText className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                 Basic Info
               </TabsTrigger>
               <TabsTrigger
                 value="academic"
-                className="data-[state=active]:bg-gray-700 data-[state=active]:text-white text-gray-400"
+                className="data-[state=active]:bg-gray-700 data-[state=active]:text-white text-gray-400 text-xs sm:text-sm px-2 py-2 whitespace-normal leading-tight text-center"
               >
-                <BookOpen className="h-4 w-4 mr-2" />
+                <BookOpen className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                 Academic
               </TabsTrigger>
               <TabsTrigger
                 value="metadata"
-                className="data-[state=active]:bg-gray-700 data-[state=active]:text-white text-gray-400"
+                className="data-[state=active]:bg-gray-700 data-[state=active]:text-white text-gray-400 text-xs sm:text-sm px-2 py-2 whitespace-normal leading-tight text-center"
               >
-                <Hash className="h-4 w-4 mr-2" />
+                <Hash className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                 Metadata
               </TabsTrigger>
               <TabsTrigger
                 value="preview"
-                className="data-[state=active]:bg-gray-700 data-[state=active]:text-white text-gray-400"
+                className="data-[state=active]:bg-gray-700 data-[state=active]:text-white text-gray-400 text-xs sm:text-sm px-2 py-2 whitespace-normal leading-tight text-center"
               >
-                <Shield className="h-4 w-4 mr-2" />
+                <Shield className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
                 Preview
               </TabsTrigger>
             </TabsList>
