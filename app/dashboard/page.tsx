@@ -76,20 +76,10 @@ export default function StudentDashboard() {
         const walletData = JSON.parse(storedWalletRaw);
         setWalletAddress(walletData?.address || null);
 
-        const localUserRaw = localStorage.getItem("vericred_user");
-        if (localUserRaw) {
-          const localUser = JSON.parse(localUserRaw);
-          setUserProfile({
-            role: localUser.role || "Individual",
-            first_name: localUser.first_name,
-            last_name: localUser.last_name,
-            email: localUser.email,
-            student_id: localUser.student_id,
-          });
-          setProfileLoading(false);
-          setLoading(false);
-          return;
-        }
+        // Do not hydrate profile from localStorage to avoid stale demo names (e.g., "Jane Doe").
+        // Always prefer API data; otherwise show placeholders.
+        // const localUserRaw = localStorage.getItem("vericred_user");
+        // if (localUserRaw) { /* ignored on purpose */ }
 
         const token = getStoredToken();
         if (isJwtValid(token)) {
