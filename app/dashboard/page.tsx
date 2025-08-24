@@ -217,6 +217,14 @@ export default function StudentDashboard() {
           method: "GET",
           headers,
         });
+
+        // If dashboard says 404, treat as no student account
+        if (res.status === 404) {
+          setNotFound(true);
+          setDashboardData(null);
+          return;
+        }
+
         const text = await res.text();
         const json = text
           ? (() => {
@@ -280,14 +288,14 @@ export default function StudentDashboard() {
               <CardContent className="space-y-4">
                 <p className="text-gray-300">
                   We couldn’t find a student profile associated with your
-                  wallet. Please create your individual account to continue.
+                  wallet. Please create your student account to continue.
                 </p>
                 <div className="flex flex-wrap gap-3">
                   <Button
                     className="bg-white text-black hover:bg-gray-100"
-                    onClick={() => (window.location.href = "/role-selection")}
+                    onClick={() => (window.location.href = "/home")}
                   >
-                    Create Individual Account
+                    Create Student Account
                   </Button>
                   <Button
                     variant="outline"
