@@ -51,16 +51,15 @@ export function VerificationSignupModal({
   const firstFieldRef = useRef<HTMLInputElement | null>(null);
 
   // Helper: push new organization to on-chain registry via newOrg(address _org)
-  async function registerOrgOnChain(orgAddress: string) {
+  async function registerOrgOnChain(orgAddress?: string) {
     try {
-      if (!orgAddress) throw new Error("Organization wallet address missing");
       if (typeof window === "undefined" || !(window as any).ethereum) {
         throw new Error("MetaMask not available");
       }
 
       const contractAddress =
         process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ||
-        "0xDE5C084a7959533893954BA072895B53fE1E7486"; // fallback demo address
+        "0xc0a70a43CD5fAF5B15db983fe9f9E769B221738e"; // updated contract
 
       const provider = new BrowserProvider((window as any).ethereum as any);
       // Ensure account access
@@ -73,7 +72,13 @@ export function VerificationSignupModal({
         signer as any
       );
 
-      const tx = await contract.newOrg(orgAddress);
+      // Default to the connected MetaMask address if none provided
+      const targetAddress =
+        orgAddress && orgAddress !== ""
+          ? orgAddress
+          : await signer.getAddress();
+
+      const tx = await contract.newOrg(targetAddress);
       const receipt = await tx.wait();
 
       // Optional: Persist tx hash to backend (best-effort)
@@ -212,10 +217,9 @@ export function VerificationSignupModal({
         localStorage.setItem("vericred_user", JSON.stringify(createdUser));
       } catch {}
 
-      // If university signup, push org to on-chain registry using the user's MetaMask address
+      // If university signup, push org to on-chain registry using MetaMask address
       if (mode === "university") {
         try {
-          // Prefer metamask address from created user, fallback to locally stored wallet
           const storedWalletRaw = localStorage.getItem("vericred_wallet");
           const storedWallet = storedWalletRaw
             ? JSON.parse(storedWalletRaw)
@@ -224,12 +228,11 @@ export function VerificationSignupModal({
             createdUser?.metamask_address ||
             createdUser?.metamaskAddress ||
             storedWallet?.address ||
-            "";
+            undefined;
 
           await registerOrgOnChain(orgAddress);
         } catch (chainErr: any) {
           console.warn("On-chain org registration failed:", chainErr);
-          // Don't block signup on chain failure; proceed to UI success
         }
       }
 
