@@ -214,18 +214,34 @@ export default function StudentDashboard() {
     (async () => {
       try {
         setDashboardError(null);
+        // Try to get metamask address from state or localStorage
+        let addr = walletAddress;
+        if (!addr) {
+          try {
+            const raw = localStorage.getItem("vericred_wallet");
+            if (raw) addr = JSON.parse(raw)?.address || null;
+          } catch {}
+        }
+
         const token = getStoredToken();
         const headers: Record<string, string> = {
           "Content-Type": "application/json",
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          ...(addr ? { "x-metamask-address": String(addr) } : {}),
         };
-        const res = await fetch(
-          "https://erired-harshitg7062-82spdej3.leapcell.dev/dashboard",
-          {
-            method: "GET",
-            headers,
-          }
-        );
+
+        const base =
+          "https://erired-harshitg7062-82spdej3.leapcell.dev/dashboard";
+        const url = new URL(base);
+        if (addr) {
+          url.searchParams.set("metamaskAddress", String(addr));
+          url.searchParams.set("metamask_address", String(addr));
+        }
+
+        const res = await fetch(url.toString(), {
+          method: "GET",
+          headers,
+        });
         const text = await res.text();
         const json = text
           ? (() => {
@@ -245,7 +261,7 @@ export default function StudentDashboard() {
         setDashboardData(null);
       }
     })();
-  }, []);
+  }, [walletAddress]);
 
   if (profileLoading) {
     return (
