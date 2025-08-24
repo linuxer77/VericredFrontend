@@ -13,8 +13,8 @@ import { clearSession } from "@/components/auth/jwt";
 export default function SiteNavbar() {
   const pathname = usePathname();
 
-  // Hide the global navbar on the landing page (root path) only
-  if (pathname === "/") {
+  // Hide the global navbar on landing pages to avoid double navbars
+  if (pathname === "/" || pathname?.startsWith("/landing-ledger")) {
     return null;
   }
 
