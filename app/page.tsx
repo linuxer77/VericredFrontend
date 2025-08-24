@@ -31,11 +31,12 @@ export default function LandingPage() {
   const router = useRouter();
 
   // Redirect to /home if a valid JWT exists
+  // Disabled to allow viewing public landing pages (e.g., /landing-ledger) even when logged in
   useEffect(() => {
-    const token = getStoredToken();
-    if (isJwtValid(token)) {
-      router.replace("/home");
-    }
+    // const token = getStoredToken();
+    // if (isJwtValid(token)) {
+    //   router.replace("/home");
+    // }
   }, [router]);
 
   const navItems = useMemo(
