@@ -231,6 +231,18 @@ export default function StudentDashboard() {
           setDashboardError(`Dashboard fetch failed (${res.status})`);
         }
         setDashboardData(json);
+
+        // Use /dashboard response to populate profile summary
+        if (res.ok) {
+          const obj = Array.isArray(json) ? json[0] || {} : json || {};
+          setUserProfile((prev) => ({
+            role: prev?.role || "Individual",
+            first_name: obj.first_name || "",
+            last_name: obj.last_name || "",
+            email: obj.email || "",
+            student_id: obj.student_id || "",
+          }));
+        }
       } catch (e: any) {
         setDashboardError(e?.message || "Failed to fetch dashboard");
         setDashboardData(null);
