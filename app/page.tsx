@@ -43,7 +43,7 @@ export default function LandingPage() {
       { label: "Home", href: "#home" },
       { label: "Docs", href: "#docs" },
       { label: "Explore", href: "#explore" },
-      { label: "Public Ledger", href: "/public-ledger" },
+      { label: "Public Ledger", href: "/landing-ledger" },
       { label: "Support", href: "#support" },
     ],
     []
