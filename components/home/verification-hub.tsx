@@ -9,6 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Building2, ShieldCheck, UserCheck, Loader2 } from "lucide-react";
 import { getStoredToken } from "@/components/auth/jwt";
+// ethers imports for on-chain org verification
+import { BrowserProvider, Contract } from "ethers";
+import mintAbi from "@/types/mint.abi.json";
 
 interface VerificationSignupModalProps {
   open: boolean;
@@ -46,6 +49,57 @@ export function VerificationSignupModal({
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const firstFieldRef = useRef<HTMLInputElement | null>(null);
+
+  // Helper: push new organization to on-chain registry via newOrg(address _org)
+  async function registerOrgOnChain(orgAddress: string) {
+    try {
+      if (!orgAddress) throw new Error("Organization wallet address missing");
+      if (typeof window === "undefined" || !(window as any).ethereum) {
+        throw new Error("MetaMask not available");
+      }
+
+      const contractAddress =
+        process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ||
+        "0xDE5C084a7959533893954BA072895B53fE1E7486"; // fallback demo address
+
+      const provider = new BrowserProvider((window as any).ethereum as any);
+      // Ensure account access
+      await (window as any).ethereum.request({ method: "eth_requestAccounts" });
+      const signer = await provider.getSigner();
+
+      const contract = new Contract(
+        contractAddress,
+        mintAbi as any,
+        signer as any
+      );
+
+      const tx = await contract.newOrg(orgAddress);
+      const receipt = await tx.wait();
+
+      // Optional: Persist tx hash to backend (best-effort)
+      try {
+        const token = getStoredToken();
+        await fetch(
+          "https://erired-harshitg7062-82spdej3.leapcell.dev/transactionhash",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            },
+            body: JSON.stringify({ transaction_hash: tx.hash }),
+          }
+        );
+      } catch (e) {
+        console.warn("Failed to persist tx hash:", e);
+      }
+
+      return receipt;
+    } catch (err) {
+      console.error("registerOrgOnChain failed:", err);
+      throw err;
+    }
+  }
 
   const reset = () => {
     setForm({
@@ -158,10 +212,31 @@ export function VerificationSignupModal({
         localStorage.setItem("vericred_user", JSON.stringify(createdUser));
       } catch {}
 
+      // If university signup, push org to on-chain registry using the user's MetaMask address
+      if (mode === "university") {
+        try {
+          // Prefer metamask address from created user, fallback to locally stored wallet
+          const storedWalletRaw = localStorage.getItem("vericred_wallet");
+          const storedWallet = storedWalletRaw
+            ? JSON.parse(storedWalletRaw)
+            : null;
+          const orgAddress =
+            createdUser?.metamask_address ||
+            createdUser?.metamaskAddress ||
+            storedWallet?.address ||
+            "";
+
+          await registerOrgOnChain(orgAddress);
+        } catch (chainErr: any) {
+          console.warn("On-chain org registration failed:", chainErr);
+          // Don't block signup on chain failure; proceed to UI success
+        }
+      }
+
       setDone(true);
       setSubmitting(false);
 
-      // Store the created user data
+      // Store the created user data (again, keep prior behavior)
       try {
         localStorage.setItem("vericred_user", JSON.stringify(createdUser));
       } catch {}
