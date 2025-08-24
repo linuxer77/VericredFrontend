@@ -359,27 +359,27 @@ export default function MintCredentialModal({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="relative bg-gradient-to-r from-gray-800 to-gray-900 p-6 border-b border-gray-800">
-          <div className="relative z-10 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
+        <div className="relative bg-gradient-to-r from-gray-800 to-gray-900 p-4 sm:p-6 border-b border-gray-800">
+          <div className="relative z-10 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-4 min-w-0">
+              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center flex-shrink-0">
                 <Award className="h-6 w-6 text-black" />
               </div>
-              <div>
-                <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+              <div className="min-w-0">
+                <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center gap-2 leading-tight break-words">
                   Mint New Credential
                   <div>
-                    <Sparkles className="h-5 w-5 text-yellow-400" />
+                    <Sparkles className="h-5 w-5 text-yellow-400 flex-shrink-0" />
                   </div>
                 </h2>
-                <p className="text-gray-400">
+                <p className="text-gray-400 text-xs sm:text-sm break-words">
                   Create and mint a new NFT credential for {student?.name}
                 </p>
               </div>
             </div>
             <button
               onClick={closeModal}
-              className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-lg"
+              className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-lg flex-shrink-0"
             >
               <X className="h-5 w-5" />
             </button>
@@ -388,17 +388,19 @@ export default function MintCredentialModal({
           {/* Student Info */}
           {student && (
             <div className="mt-4 p-4 bg-black/20 rounded-lg border border-gray-700">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
+              <div className="flex items-center gap-3 flex-wrap">
+                <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center flex-shrink-0">
                   <User className="h-5 w-5 text-white" />
                 </div>
-                <div>
-                  <p className="font-semibold text-white">{student.name}</p>
-                  <p className="text-sm text-gray-400">
+                <div className="min-w-0">
+                  <p className="font-semibold text-white break-words">
+                    {student.name}
+                  </p>
+                  <p className="text-sm text-gray-400 break-all">
                     ID: {student.universityId}
                   </p>
                 </div>
-                <div className="ml-auto">
+                <div className="ml-auto w-full sm:w-auto mt-2 sm:mt-0">
                   <Badge className="bg-green-900/30 text-green-300 border-green-800">
                     <CheckCircle className="h-3 w-3 mr-1" />
                     Eligible
@@ -416,7 +418,7 @@ export default function MintCredentialModal({
             onValueChange={setActiveTab}
             className="w-full"
           >
-            <TabsList className="grid w-full grid-cols-4 bg-gray-800 border border-gray-700">
+            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 bg-gray-800 border border-gray-700">
               <TabsTrigger
                 value="basic"
                 className="data-[state=active]:bg-gray-700 data-[state=active]:text-white text-gray-400"
@@ -684,25 +686,25 @@ export default function MintCredentialModal({
                         <div className="w-20 h-20 bg-white rounded-full mx-auto mb-4 flex items-center justify-center">
                           <Award className="h-10 w-10 text-black" />
                         </div>
-                        <h3 className="text-2xl font-bold text-white mb-2">
+                        <h3 className="text-2xl font-bold text-white mb-2 break-words">
                           {formData.name || "Credential Name"}
                         </h3>
-                        <p className="text-gray-400 text-sm">
+                        <p className="text-gray-400 text-sm break-words">
                           {formData.description || "Credential description"}
                         </p>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                         <div className="space-y-2">
                           <div className="flex justify-between">
                             <span className="text-gray-400">Type:</span>
-                            <span className="text-white">
+                            <span className="text-white break-words">
                               {formData.credentialType || "N/A"}
                             </span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-gray-400">Major:</span>
-                            <span className="text-white">
+                            <span className="text-white break-words">
                               {formData.major || "N/A"}
                             </span>
                           </div>
@@ -744,18 +746,22 @@ export default function MintCredentialModal({
 
         {/* Footer */}
         <div className="p-6 bg-gray-800 border-t border-gray-700 flex-shrink-0">
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-gray-400">
-              <p>Minting to: {student?.walletAddress}</p>
-              <p>Gas fees will be covered by university wallet</p>
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="text-sm text-gray-400 w-full sm:w-auto min-w-0 space-y-1">
+              <p className="break-all text-xs sm:text-sm">
+                Minting to: {student?.walletAddress}
+              </p>
+              <p className="text-xs sm:text-sm">
+                Gas fees will be covered by university wallet
+              </p>
             </div>
-            <div className="flex gap-3">
+            <div className="w-full sm:w-auto flex flex-wrap justify-end gap-3">
               <div>
                 <Button
                   variant="outline"
                   onClick={closeModal}
                   disabled={isSubmitting}
-                  className="border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white bg-transparent"
+                  className="border-gray-600 text-gray-300 hover:bg-gray-700 hover:text-white bg-transparent w-full sm:w-auto"
                 >
                   Cancel
                 </Button>
@@ -766,7 +772,7 @@ export default function MintCredentialModal({
                   disabled={
                     isSubmitting || !formData.name || !formData.description
                   }
-                  className="bg-white text-black hover:bg-gray-100 font-semibold min-w-[120px]"
+                  className="bg-white text-black hover:bg-gray-100 font-semibold min-w-[120px] w-full sm:w-auto"
                 >
                   {isSubmitting ? (
                     <div className="flex items-center gap-2">Uploading...</div>
