@@ -206,12 +206,6 @@ export default function DocsSection() {
             Get Started Guide
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
-          <Button
-            variant="outline"
-            className="border-gray-800 text-gray-300 hover:bg-gray-900 bg-transparent"
-          >
-            API Reference
-          </Button>
         </motion.div>
       </div>
     </section>
