@@ -19,7 +19,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, Filter, Eye, Award, Users, Sparkles } from "lucide-react";
+import {
+  Search,
+  Filter,
+  Eye,
+  Award,
+  Users,
+  Sparkles,
+  Copy,
+  Check,
+} from "lucide-react";
 import { motion } from "framer-motion";
 import { getStoredToken } from "@/components/auth/jwt";
 import UserInfoModal from "@/components/user-info-modal";
@@ -56,6 +65,15 @@ export default function StudentManagement({
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [viewOpen, setViewOpen] = useState(false);
   const [viewAddress, setViewAddress] = useState<string>("");
+  const [copiedAddr, setCopiedAddr] = useState<string | null>(null);
+
+  const copy = async (addr: string) => {
+    try {
+      await navigator.clipboard.writeText(addr);
+      setCopiedAddr(addr);
+      setTimeout(() => setCopiedAddr(null), 1200);
+    } catch {}
+  };
 
   // Fetch students from backend and map to UI shape
   useEffect(() => {
@@ -329,7 +347,21 @@ export default function StudentManagement({
                           {student.universityId}
                         </TableCell>
                         <TableCell className="text-gray-300 font-mono text-center align-middle">
-                          {formatAddress(student.walletAddress)}
+                          <div className="inline-flex items-center gap-1">
+                            {formatAddress(student.walletAddress)}
+                            <button
+                              onClick={() => copy(student.walletAddress)}
+                              className="p-1 rounded-md hover:bg-white/10"
+                              title="Copy address"
+                              aria-label="Copy wallet address"
+                            >
+                              {copiedAddr === student.walletAddress ? (
+                                <Check className="h-3.5 w-3.5 text-green-400" />
+                              ) : (
+                                <Copy className="h-3.5 w-3.5 text-gray-300" />
+                              )}
+                            </button>
+                          </div>
                         </TableCell>
                         <TableCell className="text-center align-middle">
                           <div className="flex items-center justify-center gap-2">
@@ -396,8 +428,20 @@ export default function StudentManagement({
                       <p className="text-xs text-gray-400 mt-1 break-all">
                         ID: {student.universityId}
                       </p>
-                      <p className="text-xs text-gray-400 mt-1 font-mono break-all">
+                      <p className="text-xs text-gray-400 mt-1 font-mono break-all flex items-center gap-1">
                         {formatAddress(student.walletAddress)}
+                        <button
+                          onClick={() => copy(student.walletAddress)}
+                          className="p-1 rounded-md hover:bg-white/10"
+                          title="Copy address"
+                          aria-label="Copy wallet address"
+                        >
+                          {copiedAddr === student.walletAddress ? (
+                            <Check className="h-3.5 w-3.5 text-green-400" />
+                          ) : (
+                            <Copy className="h-3.5 w-3.5 text-gray-300" />
+                          )}
+                        </button>
                       </p>
                     </div>
                   </div>

@@ -1,67 +1,86 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { User, Building2, ArrowRight, Wallet, Shield, Award, Users } from "lucide-react"
-import Logo from "@/components/ui/logo"
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Wallet,
+  User,
+  Building2,
+  ArrowRight,
+  Shield,
+  Award,
+  Users,
+  Copy,
+  Check,
+} from "lucide-react";
+import Logo from "@/components/ui/logo";
 
 export default function RoleSelection() {
-  const [selectedRole, setSelectedRole] = useState<string | null>(null)
-  const [isConnected, setIsConnected] = useState(false)
-  const [walletAddress, setWalletAddress] = useState("")
+  const [selectedRole, setSelectedRole] = useState<string | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
+  const [walletAddress, setWalletAddress] = useState("");
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     // Check wallet connection
     const checkWalletConnection = () => {
       try {
-        const storedWallet = localStorage.getItem("vericred_wallet")
+        const storedWallet = localStorage.getItem("vericred_wallet");
         if (storedWallet) {
-          const walletData = JSON.parse(storedWallet)
-          setIsConnected(true)
-          setWalletAddress(walletData.address)
+          const walletData = JSON.parse(storedWallet);
+          setIsConnected(true);
+          setWalletAddress(walletData.address);
         } else {
           // Redirect back to home if not connected
-          window.location.href = "/"
+          window.location.href = "/";
         }
       } catch (error) {
-        console.error("Error checking wallet:", error)
-        window.location.href = "/"
+        console.error("Error checking wallet:", error);
+        window.location.href = "/";
       }
-    }
+    };
 
-    checkWalletConnection()
-  }, [])
+    checkWalletConnection();
+  }, []);
 
   const handleRoleSelection = (role: string) => {
-    setSelectedRole(role)
+    setSelectedRole(role);
 
     // Add role to stored wallet data
     try {
-      const storedWallet = localStorage.getItem("vericred_wallet")
+      const storedWallet = localStorage.getItem("vericred_wallet");
       if (storedWallet) {
-        const walletData = JSON.parse(storedWallet)
-        walletData.role = role
-        localStorage.setItem("vericred_wallet", JSON.stringify(walletData))
+        const walletData = JSON.parse(storedWallet);
+        walletData.role = role;
+        localStorage.setItem("vericred_wallet", JSON.stringify(walletData));
       }
     } catch (error) {
-      console.error("Error updating wallet data:", error)
+      console.error("Error updating wallet data:", error);
     }
 
     // Redirect based on role after animation
     setTimeout(() => {
       if (role === "individual") {
-        window.location.href = "/dashboard"
+        window.location.href = "/dashboard";
       } else if (role === "university") {
-        window.location.href = "/university"
+        window.location.href = "/university";
       }
-    }, 1500)
-  }
+    }, 1500);
+  };
 
   const formatAddress = (address: string) => {
-    return `${address.slice(0, 6)}...${address.slice(-4)}`
-  }
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  };
+
+  const copyAddr = async () => {
+    try {
+      await navigator.clipboard.writeText(walletAddress);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1200);
+    } catch {}
+  };
 
   if (!isConnected) {
     return (
@@ -71,7 +90,7 @@ export default function RoleSelection() {
           <p className="text-gray-400">Verifying wallet connection...</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -137,7 +156,12 @@ export default function RoleSelection() {
         {/* Pulsing circles */}
         <motion.div
           className="absolute w-96 h-96 border border-gray-800 rounded-full"
-          style={{ left: "50%", top: "50%", marginLeft: "-192px", marginTop: "-192px" }}
+          style={{
+            left: "50%",
+            top: "50%",
+            marginLeft: "-192px",
+            marginTop: "-192px",
+          }}
           animate={{
             scale: [1, 1.2, 1],
             opacity: [0.1, 0.3, 0.1],
@@ -150,7 +174,12 @@ export default function RoleSelection() {
         />
         <motion.div
           className="absolute w-64 h-64 border border-gray-700 rounded-full"
-          style={{ left: "50%", top: "50%", marginLeft: "-128px", marginTop: "-128px" }}
+          style={{
+            left: "50%",
+            top: "50%",
+            marginLeft: "-128px",
+            marginTop: "-128px",
+          }}
           animate={{
             scale: [1, 1.3, 1],
             opacity: [0.2, 0.4, 0.2],
@@ -205,7 +234,21 @@ export default function RoleSelection() {
               transition={{ duration: 0.6, delay: 0.3 }}
             >
               <Wallet className="h-4 w-4 text-green-400" />
-              <span className="text-sm text-gray-300 font-mono">{formatAddress(walletAddress)}</span>
+              <span className="text-sm text-gray-300 font-mono">
+                {formatAddress(walletAddress)}
+              </span>
+              <button
+                onClick={copyAddr}
+                className="inline-flex items-center gap-1 rounded-md border border-gray-700 px-2 py-0.5 text-[11px] text-gray-300 hover:bg-gray-800 hover:text-white transition"
+                title="Copy address"
+                aria-label="Copy wallet address"
+              >
+                {copied ? (
+                  <Check className="h-3.5 w-3.5 text-green-400" />
+                ) : (
+                  <Copy className="h-3.5 w-3.5" />
+                )}
+              </button>
             </motion.div>
           </div>
         </motion.header>
@@ -236,7 +279,8 @@ export default function RoleSelection() {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.8, delay: 0.6 }}
               >
-                Select how you want to use VeriCred to get started with your decentralized credential journey
+                Select how you want to use VeriCred to get started with your
+                decentralized credential journey
               </motion.p>
             </motion.div>
 
@@ -282,10 +326,13 @@ export default function RoleSelection() {
                       </motion.div>
 
                       <div>
-                        <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">Individual</h2>
+                        <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">
+                          Individual
+                        </h2>
                         <p className="text-gray-400 text-base sm:text-lg leading-relaxed">
-                          Access and manage your personal credentials, request NFT certificates from institutions, and
-                          build your verified digital portfolio.
+                          Access and manage your personal credentials, request
+                          NFT certificates from institutions, and build your
+                          verified digital portfolio.
                         </p>
                       </div>
 
@@ -300,7 +347,11 @@ export default function RoleSelection() {
                         </div>
                       </div>
 
-                      <motion.div className="pt-4" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      <motion.div
+                        className="pt-4"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
                         <Button
                           className="w-full bg-white text-black hover:bg-gray-100 font-semibold py-3 text-lg"
                           disabled={selectedRole !== null}
@@ -313,7 +364,11 @@ export default function RoleSelection() {
                             >
                               <motion.div
                                 animate={{ rotate: 360 }}
-                                transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+                                transition={{
+                                  duration: 1,
+                                  repeat: Number.POSITIVE_INFINITY,
+                                  ease: "linear",
+                                }}
                               >
                                 <ArrowRight className="h-5 w-5" />
                               </motion.div>
@@ -372,10 +427,13 @@ export default function RoleSelection() {
                       </motion.div>
 
                       <div>
-                        <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">University</h2>
+                        <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">
+                          University
+                        </h2>
                         <p className="text-gray-400 text-base sm:text-lg leading-relaxed">
-                          Manage your institution's presence, issue verified credentials to students, and oversee the
-                          NFT minting process.
+                          Manage your institution's presence, issue verified
+                          credentials to students, and oversee the NFT minting
+                          process.
                         </p>
                       </div>
 
@@ -390,7 +448,11 @@ export default function RoleSelection() {
                         </div>
                       </div>
 
-                      <motion.div className="pt-4" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                      <motion.div
+                        className="pt-4"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
                         <Button
                           className="w-full bg-white text-black hover:bg-gray-100 font-semibold py-3 text-lg"
                           disabled={selectedRole !== null}
@@ -403,7 +465,11 @@ export default function RoleSelection() {
                             >
                               <motion.div
                                 animate={{ rotate: 360 }}
-                                transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+                                transition={{
+                                  duration: 1,
+                                  repeat: Number.POSITIVE_INFINITY,
+                                  ease: "linear",
+                                }}
                               >
                                 <ArrowRight className="h-5 w-5" />
                               </motion.div>
@@ -430,7 +496,9 @@ export default function RoleSelection() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 1.4 }}
             >
-              <p className="text-sm text-gray-500">You can change your role later in your account settings</p>
+              <p className="text-sm text-gray-500">
+                You can change your role later in your account settings
+              </p>
             </motion.div>
           </div>
         </div>
@@ -453,13 +521,19 @@ export default function RoleSelection() {
             <motion.div
               className="w-16 h-16 border-4 border-white border-t-transparent rounded-full mx-auto mb-4"
               animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+              transition={{
+                duration: 1,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "linear",
+              }}
             />
-            <h3 className="text-xl font-semibold text-white mb-2">Setting up your {selectedRole} account...</h3>
+            <h3 className="text-xl font-semibold text-white mb-2">
+              Setting up your {selectedRole} account...
+            </h3>
             <p className="text-gray-400">Please wait while we redirect you</p>
           </motion.div>
         </motion.div>
       )}
     </div>
-  )
+  );
 }

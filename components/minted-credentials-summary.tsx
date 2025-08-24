@@ -13,7 +13,9 @@ import { Badge } from "@/components/ui/badge";
 import {
   Award,
   Eye,
+  ExternalLink,
   Copy,
+  Check,
   Building2,
   User as UserIcon,
   CalendarDays,
@@ -67,6 +69,8 @@ export default function MintedCredentialsSummary({
 
   const [walletsOpen, setWalletsOpen] = useState(false);
   const [additionalOpen, setAdditionalOpen] = useState(false);
+
+  const [copied, setCopied] = useState<string | null>(null);
 
   // Helper to read values from IPFS JSON attributes array (trait_type/value)
   const getAttr = useCallback(
@@ -215,6 +219,14 @@ export default function MintedCredentialsSummary({
     } catch (e) {
       console.debug("Copy failed", e);
     }
+  };
+
+  const copy = async (v: string) => {
+    try {
+      await navigator.clipboard.writeText(v);
+      setCopied(v);
+      setTimeout(() => setCopied(null), 1200);
+    } catch {}
   };
 
   // IPFS fetch with gateway fallbacks
@@ -425,8 +437,21 @@ export default function MintedCredentialsSummary({
                     <div className="mt-4 flex items-center justify-between gap-2 text-xs text-gray-400">
                       <div className="flex items-center gap-2 min-w-0">
                         <span className="text-gray-500">Issuer</span>
-                        <span className="truncate max-w-[180px] sm:max-w-[260px]">
+                        <span className="truncate max-w-[180px] sm:max-w-[260px] flex items-center gap-1">
                           {c.university_wallet || c.universityName || "Unknown"}
+                          {c.university_wallet && (
+                            <button
+                              className="p-1 rounded-md hover:bg-white/10"
+                              onClick={() => copy(c.university_wallet!)}
+                              title="Copy issuer wallet"
+                            >
+                              {copied === c.university_wallet ? (
+                                <Check className="h-3.5 w-3.5 text-green-400" />
+                              ) : (
+                                <Copy className="h-3.5 w-3.5 text-gray-300" />
+                              )}
+                            </button>
+                          )}
                         </span>
                       </div>
                       <div className="whitespace-nowrap">

@@ -114,6 +114,16 @@ export default function MintCredentialModal({
     any | null
   >(null);
   const [copied, setCopied] = useState(false);
+  const [copiedAddr, setCopiedAddr] = useState<string | null>(null);
+
+  const copyAddr = async (addr?: string) => {
+    if (!addr) return;
+    try {
+      await navigator.clipboard.writeText(addr);
+      setCopiedAddr(addr);
+      setTimeout(() => setCopiedAddr(null), 1200);
+    } catch {}
+  };
 
   // Initialize form with default values when modal opens
   useEffect(() => {

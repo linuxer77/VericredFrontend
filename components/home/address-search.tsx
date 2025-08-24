@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Search, ExternalLink } from "lucide-react";
+import { Copy, Search, ExternalLink, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Dialog,
@@ -54,6 +54,7 @@ export default function AddressSearch() {
   const [open, setOpen] = useState(false);
   const [profile, setProfile] = useState<ShowUserResponse | null>(null);
   const [creds, setCreds] = useState<UserCred[]>([]);
+  const [copied, setCopied] = useState(false);
 
   const isLikelyAddress = useMemo(
     () => /^0x[a-fA-F0-9]{6,}$/.test(query.trim()),
@@ -63,6 +64,15 @@ export default function AddressSearch() {
   function copy(value: string) {
     navigator.clipboard.writeText(value);
   }
+
+  const copyAddress = async () => {
+    if (!profile?.metamask_address) return;
+    try {
+      await navigator.clipboard.writeText(profile.metamask_address);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1200);
+    } catch {}
+  };
 
   const handleSearch = async () => {
     if (!isLikelyAddress) return;
@@ -78,11 +88,14 @@ export default function AddressSearch() {
       };
 
       // 1) Fetch user profile
-      const res = await fetch("https://erired-harshitg7062-82spdej3.leapcell.dev/showuser", {
-        method: "POST",
-        headers,
-        body: JSON.stringify({ metamask_address: addr }),
-      });
+      const res = await fetch(
+        "https://erired-harshitg7062-82spdej3.leapcell.dev/showuser",
+        {
+          method: "POST",
+          headers,
+          body: JSON.stringify({ metamask_address: addr }),
+        }
+      );
       if (!res.ok) throw new Error(`showuser failed (${res.status})`);
       const userJson: any = await res.json();
       const user: ShowUserResponse = Array.isArray(userJson)
@@ -91,11 +104,14 @@ export default function AddressSearch() {
       setProfile(user || null);
 
       // 2) Fetch user credentials
-      const cr = await fetch("https://erired-harshitg7062-82spdej3.leapcell.dev/usercreds", {
-        method: "POST",
-        headers,
-        body: JSON.stringify({ metamask_address: addr }),
-      });
+      const cr = await fetch(
+        "https://erired-harshitg7062-82spdej3.leapcell.dev/usercreds",
+        {
+          method: "POST",
+          headers,
+          body: JSON.stringify({ metamask_address: addr }),
+        }
+      );
       if (!cr.ok) throw new Error(`usercreds failed (${cr.status})`);
       const cj: any = await cr.json();
       const list: UserCred[] = Array.isArray(cj)
@@ -163,13 +179,26 @@ export default function AddressSearch() {
             <DialogTitle className="flex items-center gap-2">
               User Profile
             </DialogTitle>
-            <DialogDescription className="font-mono text-xs text-gray-400">
+            <DialogDescription className="font-mono text-xs text-gray-400 flex items-center gap-2">
               {profile?.metamask_address
                 ? `${profile.metamask_address.slice(
                     0,
                     10
                   )}...${profile.metamask_address.slice(-8)}`
                 : ""}
+              {profile?.metamask_address && (
+                <button
+                  onClick={copyAddress}
+                  className="inline-flex items-center gap-1 rounded-md border border-gray-700 px-2 py-0.5 text-[11px] text-gray-300 hover:bg-gray-800 hover:text-white transition"
+                  title="Copy address"
+                >
+                  {copied ? (
+                    <Check className="h-3.5 w-3.5 text-green-400" />
+                  ) : (
+                    <Copy className="h-3.5 w-3.5" />
+                  )}
+                </button>
+              )}
             </DialogDescription>
           </DialogHeader>
 

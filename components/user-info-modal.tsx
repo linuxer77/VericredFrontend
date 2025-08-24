@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink, Copy } from "lucide-react";
+import { ExternalLink, Copy, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getStoredToken } from "@/components/auth/jwt";
 
@@ -55,6 +55,7 @@ export default function UserInfoModal({
   const [error, setError] = useState<string | null>(null);
   const [profile, setProfile] = useState<ShowUserResponse | null>(null);
   const [creds, setCreds] = useState<UserCred[]>([]);
+  const [copied, setCopied] = useState(false);
 
   const isLikelyAddress = useMemo(
     () => /^0x[a-fA-F0-9]{6,}$/.test((address || "").trim()),
@@ -63,6 +64,8 @@ export default function UserInfoModal({
 
   function copy(value: string) {
     navigator.clipboard.writeText(value);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1200);
   }
 
   useEffect(() => {
@@ -133,10 +136,23 @@ export default function UserInfoModal({
           <DialogTitle className="flex items-center gap-2">
             User Profile
           </DialogTitle>
-          <DialogDescription className="font-mono text-xs text-gray-400">
+          <DialogDescription className="font-mono text-xs text-gray-400 flex items-center gap-2">
             {isLikelyAddress
               ? `${address.slice(0, 10)}...${address.slice(-8)}`
               : ""}
+            {isLikelyAddress && (
+              <button
+                onClick={() => copy(address)}
+                className="inline-flex items-center gap-1 rounded-md border border-gray-700 px-2 py-0.5 text-[11px] text-gray-300 hover:bg-gray-800 hover:text-white transition"
+                title="Copy address"
+              >
+                {copied ? (
+                  <Check className="h-3.5 w-3.5 text-green-400" />
+                ) : (
+                  <Copy className="h-3.5 w-3.5" />
+                )}
+              </button>
+            )}
           </DialogDescription>
         </DialogHeader>
 

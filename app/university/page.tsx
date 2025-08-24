@@ -19,6 +19,9 @@ import {
   Clock,
   CheckCircle,
   ListChecks,
+  RefreshCw,
+  Copy,
+  Check,
 } from "lucide-react";
 import UniversityProfile from "@/components/university-profile";
 import StudentManagement from "@/components/student-management";
@@ -28,7 +31,6 @@ import { motion } from "framer-motion";
 import Logo from "@/components/ui/logo";
 import { getStoredToken } from "@/components/auth/jwt";
 import { useToast } from "@/components/ui/toast";
-import { RefreshCw } from "lucide-react";
 
 // Mock data types
 interface University {
@@ -117,6 +119,7 @@ export default function UniversityDashboard() {
   const [pendingRequests, setPendingRequests] = useState<
     Array<{ student_wallet: string; university_wallet: string; id?: string }>
   >([]);
+  const [copiedWallet, setCopiedWallet] = useState<string | null>(null);
   const { showToast } = useToast();
 
   // Set client state after mount
@@ -805,11 +808,37 @@ export default function UniversityDashboard() {
                                 <p className="text-white font-medium text-sm sm:text-base">
                                   Student Wallet
                                 </p>
-                                <p className="font-mono text-xs sm:text-sm text-gray-300 break-all">
+                                <p className="font-mono text-xs sm:text-sm text-gray-300 break-all flex items-center gap-1">
                                   {wallet || "—"}
+                                  {wallet && (
+                                    <button
+                                      onClick={() => copyWallet(wallet)}
+                                      className="p-1 rounded-md hover:bg-white/10"
+                                      title="Copy student wallet"
+                                    >
+                                      {copiedWallet === wallet ? (
+                                        <Check className="h-3.5 w-3.5 text-green-400" />
+                                      ) : (
+                                        <Copy className="h-3.5 w-3.5 text-gray-300" />
+                                      )}
+                                    </button>
+                                  )}
                                 </p>
-                                <p className="text-[11px] sm:text-xs text-gray-500 mt-1 break-all">
+                                <p className="text-[11px] sm:text-xs text-gray-500 mt-1 break-all flex items-center gap-1">
                                   University: {uniWallet || "—"}
+                                  {uniWallet && (
+                                    <button
+                                      onClick={() => copyWallet(uniWallet)}
+                                      className="p-1 rounded-md hover:bg-white/10 ml-1"
+                                      title="Copy university wallet"
+                                    >
+                                      {copiedWallet === uniWallet ? (
+                                        <Check className="h-3.5 w-3.5 text-green-400" />
+                                      ) : (
+                                        <Copy className="h-3.5 w-3.5 text-gray-300" />
+                                      )}
+                                    </button>
+                                  )}
                                 </p>
                               </div>
                               <div className="flex items-center gap-2 w-full sm:w-auto justify-end">

@@ -28,6 +28,8 @@ import {
   MoreHorizontal,
   ChevronRight,
   TrendingUp,
+  Copy,
+  Check,
 } from "lucide-react";
 import Logo from "@/components/ui/logo";
 
@@ -58,6 +60,7 @@ export default function CredentialDetails() {
   const [loading, setLoading] = useState(true);
   const [imageLoaded, setImageLoaded] = useState(false);
   const [activeTab, setActiveTab] = useState("details");
+  const [copied, setCopied] = useState<string | null>(null);
 
   // Mock credential data
   useEffect(() => {
@@ -157,6 +160,14 @@ export default function CredentialDetails() {
       default:
         return <FileText className="h-4 w-4" />;
     }
+  };
+
+  const copy = async (v: string) => {
+    try {
+      await navigator.clipboard.writeText(v);
+      setCopied(v);
+      setTimeout(() => setCopied(null), 1200);
+    } catch {}
   };
 
   if (loading) {
@@ -475,8 +486,23 @@ export default function CredentialDetails() {
                   <CardContent className="space-y-3">
                     <div className="flex justify-between">
                       <span className="text-gray-400">Contract Address</span>
-                      <span className="text-white font-mono text-sm">
+                      <span className="text-white font-mono text-sm flex items-center gap-1">
                         {formatAddress(getAttributeValue("Issuer Wallet"))}
+                        {getAttributeValue("Issuer Wallet") && (
+                          <button
+                            onClick={() =>
+                              copy(getAttributeValue("Issuer Wallet"))
+                            }
+                            className="p-1 rounded-md hover:bg-white/10"
+                            title="Copy issuer wallet"
+                          >
+                            {copied === getAttributeValue("Issuer Wallet") ? (
+                              <Check className="h-3.5 w-3.5 text-green-400" />
+                            ) : (
+                              <Copy className="h-3.5 w-3.5 text-gray-300" />
+                            )}
+                          </button>
+                        )}
                       </span>
                     </div>
                     <div className="flex justify-between">
@@ -515,10 +541,23 @@ export default function CredentialDetails() {
                           <p className="text-xs text-gray-400 mb-1">
                             {attribute.trait_type}
                           </p>
-                          <p className="font-medium text-white text-sm truncate">
+                          <p className="font-medium text-white text-sm truncate flex items-center gap-1">
                             {attribute.trait_type.includes("Wallet")
                               ? formatAddress(attribute.value)
                               : attribute.value}
+                            {attribute.trait_type.includes("Wallet") && (
+                              <button
+                                onClick={() => copy(attribute.value)}
+                                className="p-1 rounded-md hover:bg-white/10"
+                                title="Copy address"
+                              >
+                                {copied === attribute.value ? (
+                                  <Check className="h-3.5 w-3.5 text-green-400" />
+                                ) : (
+                                  <Copy className="h-3.5 w-3.5 text-gray-300" />
+                                )}
+                              </button>
+                            )}
                           </p>
                           <p className="text-xs text-gray-500 mt-1">
                             {Math.floor(Math.random() * 20 + 5)}% have this

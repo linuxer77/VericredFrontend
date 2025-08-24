@@ -11,8 +11,11 @@ import {
   Building2,
   Users,
   Award,
+  Copy,
+  Check,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { useState } from "react";
 
 interface University {
   id: string;
@@ -32,8 +35,16 @@ interface UniversityProfileProps {
 export default function UniversityProfile({
   university,
 }: UniversityProfileProps) {
+  const [copied, setCopied] = useState(false);
   const formatAddress = (address: string) => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  };
+  const copyAddr = async () => {
+    try {
+      await navigator.clipboard.writeText(university.walletAddress);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1200);
+    } catch {}
   };
 
   const containerVariants = {
@@ -161,13 +172,30 @@ export default function UniversityProfile({
                   <div className="w-10 h-10 rounded-lg bg-purple-600/20 flex items-center justify-center">
                     <Wallet className="h-5 w-5 text-purple-400" />
                   </div>
-                  <div>
+                  <div className="flex-1 min-w-0">
                     <p className="text-xs text-gray-400 uppercase tracking-wide">
                       Wallet Address
                     </p>
-                    <p className="text-gray-300 text-sm font-mono font-medium">
-                      {formatAddress(university.walletAddress)}
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-gray-300 text-sm font-mono font-medium truncate">
+                        {formatAddress(university.walletAddress)}
+                      </p>
+                      <button
+                        onClick={copyAddr}
+                        className="inline-flex items-center gap-1 rounded-md border border-gray-700 px-2 py-1 text-[11px] text-gray-300 hover:bg-gray-800 hover:text-white transition"
+                        title="Copy address"
+                        aria-label="Copy wallet address"
+                      >
+                        {copied ? (
+                          <Check className="h-3.5 w-3.5 text-green-400" />
+                        ) : (
+                          <Copy className="h-3.5 w-3.5" />
+                        )}
+                        <span className="hidden md:inline">
+                          {copied ? "Copied" : "Copy"}
+                        </span>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </motion.div>
