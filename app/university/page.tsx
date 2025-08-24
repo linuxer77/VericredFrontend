@@ -755,40 +755,8 @@ export default function UniversityDashboard() {
                   </Card>
                 </div>
 
-                {/* Recent Activity */}
-                <Card className="bg-gradient-to-br from-gray-900/90 via-black/80 to-purple-900/20 border border-gray-800/60 backdrop-blur-xl shadow-2xl">
-                  <CardHeader>
-                    <CardTitle className="text-white flex items-center gap-2">
-                      <TrendingUp className="h-5 w-5 text-purple-400" />
-                      Recent Activity
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {recentActivities.map((activity) => (
-                        <div
-                          key={activity.id}
-                          className="flex items-center justify-between p-4 bg-gray-800/50 rounded-lg border border-gray-700 hover:border-purple-700/50 transition-all duration-200 hover:bg-gray-800/70 cursor-pointer"
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-lg bg-purple-600/20 flex items-center justify-center">
-                              {getActivityIcon(activity.type)}
-                            </div>
-                            <div>
-                              <p className="font-medium text-white">
-                                {activity.student}
-                              </p>
-                              <p className="text-sm text-gray-400">
-                                {activity.credential} • {activity.time}
-                              </p>
-                            </div>
-                          </div>
-                          {getActivityStatus(activity.status)}
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
+                {/* Removed Recent Activity card for a cleaner aesthetic */}
+                {/* <Card> ...Recent Activity... </Card> */}
               </TabsContent>
 
               {/* Students Management */}

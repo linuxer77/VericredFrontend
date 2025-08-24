@@ -278,91 +278,155 @@ export default function StudentManagement({
               </Select>
             </motion.div>
 
-            {/* Students Table */}
+            {/* Students Table (desktop/tablet) */}
             <motion.div
-              className="border border-gray-700/60 rounded-lg overflow-hidden bg-gray-800/20 backdrop-blur-sm"
+              className="hidden sm:block border border-gray-700/60 rounded-lg overflow-hidden bg-gray-800/20 backdrop-blur-sm"
               variants={itemVariants}
             >
-              <Table className="table-fixed">
-                <TableHeader>
-                  <TableRow className="border-gray-700/60 hover:bg-gray-800/40 transition-colors duration-200">
-                    <TableHead className="text-purple-300 font-semibold text-center w-1/4">
-                      Student
-                    </TableHead>
-                    <TableHead className="text-purple-300 font-semibold text-center w-1/4">
-                      University ID
-                    </TableHead>
-                    <TableHead className="text-purple-300 font-semibold text-center w-1/4">
-                      Wallet Address
-                    </TableHead>
-                    <TableHead className="text-purple-300 font-semibold text-center w-1/4">
-                      Actions
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredStudents.map((student, index) => (
-                    <motion.tr
-                      key={student.id}
-                      variants={tableRowVariants}
-                      initial="hidden"
-                      animate="visible"
-                      transition={{ delay: index * 0.05 }}
-                      whileHover={{
-                        backgroundColor: "rgba(147, 51, 234, 0.1)",
-                        scale: 1.01,
-                      }}
-                      className="border-gray-700/60 hover:bg-gray-800/40 transition-all duration-200"
-                    >
-                      <TableCell className="text-center align-middle">
-                        <div className="text-center">
-                          <p className="font-medium text-white">
-                            {student.name}
-                          </p>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-gray-300 font-mono text-center align-middle">
-                        {student.universityId}
-                      </TableCell>
-                      <TableCell className="text-gray-300 font-mono text-center align-middle">
-                        {formatAddress(student.walletAddress)}
-                      </TableCell>
-                      <TableCell className="text-center align-middle">
-                        <div className="flex items-center justify-center gap-2">
-                          <motion.div
-                            whileHover={{ scale: 1.05 }}
-                            transition={{ duration: 0.2 }}
-                          >
-                            <Button
-                              size="sm"
-                              onClick={() => onMintCredential(student)}
-                              disabled={loading}
-                              className="bg-gradient-to-r from-purple-600 to-purple-700 text-white hover:from-purple-700 hover:to-purple-800 transition-all duration-200 transform hover:scale-105 shadow-lg shadow-purple-500/25"
+              <div className="overflow-x-auto">
+                <Table className="min-w-full table-fixed">
+                  <TableHeader>
+                    <TableRow className="border-gray-700/60 hover:bg-gray-800/40 transition-colors duration-200">
+                      <TableHead className="text-purple-300 font-semibold text-center w-1/4">
+                        Student
+                      </TableHead>
+                      <TableHead className="text-purple-300 font-semibold text-center w-1/4">
+                        University ID
+                      </TableHead>
+                      <TableHead className="text-purple-300 font-semibold text-center w-1/4">
+                        Wallet Address
+                      </TableHead>
+                      <TableHead className="text-purple-300 font-semibold text-center w-1/4">
+                        Actions
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredStudents.map((student, index) => (
+                      <motion.tr
+                        key={student.id}
+                        variants={tableRowVariants}
+                        initial="hidden"
+                        animate="visible"
+                        transition={{ delay: index * 0.05 }}
+                        whileHover={{
+                          backgroundColor: "rgba(147, 51, 234, 0.1)",
+                          scale: 1.01,
+                        }}
+                        className="border-gray-700/60 hover:bg-gray-800/40 transition-all duration-200"
+                      >
+                        <TableCell className="text-center align-middle">
+                          <div className="text-center">
+                            <p className="font-medium text-white">
+                              {student.name}
+                            </p>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-gray-300 font-mono text-center align-middle">
+                          {student.universityId}
+                        </TableCell>
+                        <TableCell className="text-gray-300 font-mono text-center align-middle">
+                          {formatAddress(student.walletAddress)}
+                        </TableCell>
+                        <TableCell className="text-center align-middle">
+                          <div className="flex items-center justify-center gap-2">
+                            <motion.div
+                              whileHover={{ scale: 1.05 }}
+                              transition={{ duration: 0.2 }}
                             >
-                              <Award className="h-4 w-4 mr-1" />
-                              Mint
-                            </Button>
-                          </motion.div>
+                              <Button
+                                size="sm"
+                                onClick={() => onMintCredential(student)}
+                                disabled={loading}
+                                className="bg-gradient-to-r from-purple-600 to-purple-700 text-white hover:from-purple-700 hover:to-purple-800 transition-all duration-200 transform hover:scale-105 shadow-lg shadow-purple-500/25"
+                              >
+                                <Award className="h-4 w-4 mr-1" />
+                                Mint
+                              </Button>
+                            </motion.div>
 
-                          <motion.div
-                            whileHover={{ scale: 1.05 }}
-                            transition={{ duration: 0.2 }}
-                          >
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="border-purple-700/60 text-purple-300 hover:bg-purple-900/20 bg-transparent transition-all duration-200"
+                            <motion.div
+                              whileHover={{ scale: 1.05 }}
+                              transition={{ duration: 0.2 }}
                             >
-                              <Eye className="h-4 w-4 mr-1" />
-                              View
-                            </Button>
-                          </motion.div>
-                        </div>
-                      </TableCell>
-                    </motion.tr>
-                  ))}
-                </TableBody>
-              </Table>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="border-purple-700/60 text-purple-300 hover:bg-purple-900/20 bg-transparent transition-all duration-200"
+                              >
+                                <Eye className="h-4 w-4 mr-1" />
+                                View
+                              </Button>
+                            </motion.div>
+                          </div>
+                        </TableCell>
+                      </motion.tr>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </motion.div>
+
+            {/* Students List (mobile) */}
+            <motion.div
+              className="block sm:hidden space-y-3"
+              variants={itemVariants}
+            >
+              {filteredStudents.map((student, index) => (
+                <motion.div
+                  key={student.id}
+                  variants={tableRowVariants}
+                  initial="hidden"
+                  animate="visible"
+                  transition={{ delay: index * 0.05 }}
+                  className="p-4 rounded-lg border border-gray-700/60 bg-gray-800/40 backdrop-blur-sm"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="text-white font-medium text-base break-words">
+                        {student.name}
+                      </p>
+                      <p className="text-xs text-gray-400 mt-1 break-all">
+                        ID: {student.universityId}
+                      </p>
+                      <p className="text-xs text-gray-400 mt-1 font-mono break-all">
+                        {formatAddress(student.walletAddress)}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="mt-3 grid grid-cols-2 gap-2">
+                    <Button
+                      size="sm"
+                      onClick={() => onMintCredential(student)}
+                      disabled={loading}
+                      className="bg-gradient-to-r from-purple-600 to-purple-700 text-white hover:from-purple-700 hover:to-purple-800"
+                    >
+                      Mint
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="border-purple-700/60 text-purple-300 hover:bg-purple-900/20 bg-transparent"
+                    >
+                      View
+                    </Button>
+                  </div>
+                </motion.div>
+              ))}
+
+              {filteredStudents.length === 0 && (
+                <motion.div
+                  className="text-center py-10"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-gray-800/60 flex items-center justify-center">
+                    <Users className="h-7 w-7 text-gray-500" />
+                  </div>
+                  <p className="text-gray-400">No students found.</p>
+                </motion.div>
+              )}
             </motion.div>
 
             {filteredStudents.length === 0 && (

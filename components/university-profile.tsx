@@ -79,14 +79,14 @@ export default function UniversityProfile({
               variants={itemVariants}
             >
               <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 mb-4">
-                {/* University Icon instead of logo */}
-                <motion.div
+                {/* University Icon removed for a cleaner look */}
+                {/* <motion.div
                   className="flex-shrink-0 w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-600 to-purple-800 flex items-center justify-center shadow-lg"
                   whileHover={{ scale: 1.05, rotate: 5 }}
                   transition={{ duration: 0.3 }}
                 >
                   <Building2 className="h-10 w-10 text-white" />
-                </motion.div>
+                </motion.div> */}
 
                 <div className="flex-1 text-center sm:text-left">
                   <motion.h1
