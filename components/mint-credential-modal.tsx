@@ -220,7 +220,7 @@ export default function MintCredentialModal({
     try {
       const contractAddress =
         process.env.NEXT_PUBLIC_CONTRACT_ADDRESS ||
-        "0xDE5C084a7959533893954BA072895B53fE1E7486";
+        "0xc0a70a43CD5fAF5B15db983fe9f9E769B221738e";
       if (!contractAddress) throw new Error("Contract address not set");
 
       if (typeof window === "undefined" || !(window as any).ethereum) {

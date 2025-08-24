@@ -22,6 +22,7 @@ import {
 import { Search, Filter, Eye, Award, Users, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { getStoredToken } from "@/components/auth/jwt";
+import UserInfoModal from "@/components/user-info-modal";
 
 interface Student {
   id: string;
@@ -53,6 +54,8 @@ export default function StudentManagement({
   const [statusFilter, setStatusFilter] = useState("all");
   const [loading, setLoading] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
+  const [viewOpen, setViewOpen] = useState(false);
+  const [viewAddress, setViewAddress] = useState<string>("");
 
   // Fetch students from backend and map to UI shape
   useEffect(() => {
@@ -353,6 +356,10 @@ export default function StudentManagement({
                                 variant="outline"
                                 size="sm"
                                 className="border-purple-700/60 text-purple-300 hover:bg-purple-900/20 bg-transparent transition-all duration-200"
+                                onClick={() => {
+                                  setViewAddress(student.walletAddress);
+                                  setViewOpen(true);
+                                }}
                               >
                                 <Eye className="h-4 w-4 mr-1" />
                                 View
@@ -407,6 +414,10 @@ export default function StudentManagement({
                       variant="outline"
                       size="sm"
                       className="border-purple-700/60 text-purple-300 hover:bg-purple-900/20 bg-transparent"
+                      onClick={() => {
+                        setViewAddress(student.walletAddress);
+                        setViewOpen(true);
+                      }}
                     >
                       View
                     </Button>
@@ -428,6 +439,13 @@ export default function StudentManagement({
                 </motion.div>
               )}
             </motion.div>
+
+            {/* Reusable user info modal */}
+            <UserInfoModal
+              open={viewOpen}
+              onOpenChange={setViewOpen}
+              address={viewAddress}
+            />
 
             {filteredStudents.length === 0 && (
               <motion.div

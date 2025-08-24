@@ -25,8 +25,8 @@ import {
   X,
 } from "lucide-react";
 
-const CONTRACT_TX_URL =
-  "https://sepolia.etherscan.io/token/0xDE5C084a7959533893954BA072895B53fE1E7486";
+const TOKEN_URL =
+  "https://sepolia.etherscan.io/token/0xc0a70a43CD5fAF5B15db983fe9f9E769B221738e";
 
 // Helper to build a Sepolia Etherscan TX url from the hash
 const TX_URL = (hash: string) => `https://sepolia.etherscan.io/tx/${hash}`;
@@ -392,7 +392,7 @@ export default function LandingPublicLedgerPage() {
                     className="relative overflow-hidden rounded-md bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-md focus-visible:ring-2 focus-visible:ring-purple-400/50 px-3 sm:px-4 py-2 text-sm"
                   >
                     <a
-                      href={CONTRACT_TX_URL}
+                      href={TOKEN_URL}
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label="Open contract transactions on Sepolia Etherscan"
