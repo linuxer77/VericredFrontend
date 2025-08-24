@@ -214,18 +214,9 @@ export default function StudentDashboard() {
     (async () => {
       try {
         setDashboardError(null);
-        // Try to get metamask address from state or localStorage
-        let addr = walletAddress;
-        if (!addr) {
-          try {
-            const raw = localStorage.getItem("vericred_wallet");
-            if (raw) addr = JSON.parse(raw)?.address || null;
-          } catch {}
-        }
 
         const token = getStoredToken();
         const headers: Record<string, string> = {
-          "Content-Type": "application/json",
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         };
 
@@ -235,7 +226,6 @@ export default function StudentDashboard() {
         const res = await fetch(url, {
           method: "GET",
           headers,
-          body: JSON.stringify({ metamaskAddress: addr || "" }),
         });
         const text = await res.text();
         const json = text
