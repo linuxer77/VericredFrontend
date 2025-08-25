@@ -172,141 +172,146 @@ export default function AddressSearch() {
         </p>
       </CardContent>
 
-      {/* Results Modal */}
+      {/* Results Modal - redesigned visuals only */}
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-3xl bg-gradient-to-br from-gray-950 to-gray-900 border border-gray-800 text-white">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              User Profile
-            </DialogTitle>
-            <DialogDescription className="font-mono text-xs text-gray-400 flex items-center gap-2">
-              {profile?.metamask_address
-                ? `${profile.metamask_address.slice(
-                    0,
-                    10
-                  )}...${profile.metamask_address.slice(-8)}`
-                : ""}
-              {profile?.metamask_address && (
-                <button
-                  onClick={copyAddress}
-                  className="inline-flex items-center gap-1 rounded-md border border-gray-700 px-2 py-0.5 text-[11px] text-gray-300 hover:bg-gray-800 hover:text-white transition"
-                  title="Copy address"
-                >
-                  {copied ? (
-                    <Check className="h-3.5 w-3.5 text-green-400" />
-                  ) : (
-                    <Copy className="h-3.5 w-3.5" />
-                  )}
-                </button>
-              )}
-            </DialogDescription>
-          </DialogHeader>
+        <DialogContent className="max-w-3xl bg-gradient-to-br from-gray-950 via-black/90 to-gray-900 border border-gray-800 text-white rounded-2xl shadow-2xl p-0">
+          <div className="relative">
+            {/* Top accent bar */}
+            <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-purple-400 via-white to-purple-500" />
 
-          <div className="space-y-6">
-            {/* Profile grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-              <div>
-                <p className="text-gray-400">Name</p>
-                <p className="text-gray-200">
-                  {profile?.first_name || ""} {profile?.last_name || ""}
-                </p>
-              </div>
-              <div>
-                <p className="text-gray-400">Email</p>
-                <p className="text-gray-200">{profile?.email || "—"}</p>
-              </div>
-              <div>
-                <p className="text-gray-400">Student ID</p>
-                <p className="text-gray-200">{profile?.student_id || "—"}</p>
-              </div>
-              <div>
-                <p className="text-gray-400">Verified</p>
-                <p className="text-gray-200">
-                  {profile?.is_verified ? "Yes" : "No"}
-                </p>
-              </div>
-            </div>
+            <DialogHeader className="px-6 pt-6">
+              <DialogTitle className="flex items-center gap-2 text-white">
+                User Profile
+              </DialogTitle>
+              <DialogDescription className="font-mono text-xs text-gray-400 flex items-center gap-2">
+                {profile?.metamask_address
+                  ? `${profile.metamask_address.slice(
+                      0,
+                      10
+                    )}...${profile.metamask_address.slice(-8)}`
+                  : ""}
+                {profile?.metamask_address && (
+                  <button
+                    onClick={copyAddress}
+                    className="inline-flex items-center gap-1 rounded-md border border-gray-700 px-2 py-0.5 text-[11px] text-gray-300 hover:bg-gray-800 hover:text-white transition"
+                    title="Copy address"
+                  >
+                    {copied ? (
+                      <Check className="h-3.5 w-3.5 text-green-400" />
+                    ) : (
+                      <Copy className="h-3.5 w-3.5" />
+                    )}
+                  </button>
+                )}
+              </DialogDescription>
+            </DialogHeader>
 
-            {/* Minted credentials */}
-            <div className="p-4 rounded-xl bg-gradient-to-br from-gray-900/85 to-gray-900/75 border border-gray-800">
-              <div className="flex items-center justify-between mb-3">
-                <p className="text-sm text-gray-300">Minted Credentials</p>
-                <Badge className="bg-purple-900/40 text-purple-200 border-purple-800">
-                  {creds.length}
-                </Badge>
+            <div className="px-6 pb-6 space-y-6">
+              {/* Profile grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <p className="text-gray-400">Name</p>
+                  <p className="text-gray-200">
+                    {profile?.first_name || ""} {profile?.last_name || ""}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-gray-400">Email</p>
+                  <p className="text-gray-200">{profile?.email || "—"}</p>
+                </div>
+                <div>
+                  <p className="text-gray-400">Student ID</p>
+                  <p className="text-gray-200">{profile?.student_id || "—"}</p>
+                </div>
+                <div>
+                  <p className="text-gray-400">Verified</p>
+                  <p className="text-gray-200">
+                    {profile?.is_verified ? "Yes" : "No"}
+                  </p>
+                </div>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <AnimatePresence initial={false}>
-                  {creds.length === 0 ? (
-                    <p className="text-xs text-gray-500">
-                      No credentials found for this user.
-                    </p>
-                  ) : (
-                    creds.map((c, i) => (
-                      <motion.div
-                        key={c.id || i}
-                        initial={{ opacity: 0, y: 6 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.2, delay: i * 0.02 }}
-                        className="p-3 rounded-lg bg-gray-900/70 border border-gray-800"
-                      >
-                        <div className="text-white font-medium truncate">
-                          {c.degree_name || "Credential"}
-                        </div>
-                        <div className="text-xs text-gray-400 mt-0.5">
-                          {c.type || ""} {c.major ? `• ${c.major}` : ""}
-                        </div>
-                        <div className="text-xs text-gray-400 mt-1">
-                          Issued:{" "}
-                          <span className="text-gray-300">
-                            {niceDate(c.issued_date)}
-                          </span>
-                        </div>
-                        <div className="mt-2 flex items-center gap-2">
-                          {c.ipfs_link && (
-                            <Button
-                              asChild
-                              size="sm"
-                              className="h-7 px-2 bg-white text-black hover:bg-gray-100"
-                            >
-                              <a
-                                href={c.ipfs_link}
-                                target="_blank"
-                                rel="noopener noreferrer"
+
+              {/* Minted credentials */}
+              <div className="p-4 rounded-xl bg-gradient-to-br from-gray-900/85 to-gray-900/75 border border-gray-800">
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-sm text-gray-300">Minted Credentials</p>
+                  <Badge className="bg-purple-900/40 text-purple-200 border-purple-800">
+                    {creds.length}
+                  </Badge>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <AnimatePresence initial={false}>
+                    {creds.length === 0 ? (
+                      <p className="text-xs text-gray-500">
+                        No credentials found for this user.
+                      </p>
+                    ) : (
+                      creds.map((c, i) => (
+                        <motion.div
+                          key={c.id || i}
+                          initial={{ opacity: 0, y: 6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.2, delay: i * 0.02 }}
+                          className="p-3 rounded-lg bg-gray-900/70 border border-gray-800"
+                        >
+                          <div className="text-white font-medium truncate">
+                            {c.degree_name || "Credential"}
+                          </div>
+                          <div className="text-xs text-gray-400 mt-0.5">
+                            {c.type || ""} {c.major ? `• ${c.major}` : ""}
+                          </div>
+                          <div className="text-xs text-gray-400 mt-1">
+                            Issued:{" "}
+                            <span className="text-gray-300">
+                              {niceDate(c.issued_date)}
+                            </span>
+                          </div>
+                          <div className="mt-2 flex items-center gap-2">
+                            {c.ipfs_link && (
+                              <Button
+                                asChild
+                                size="sm"
+                                className="h-7 px-2 bg-white text-black hover:bg-gray-100"
                               >
-                                <ExternalLink className="h-3.5 w-3.5 mr-1" />{" "}
-                                IPFS
-                              </a>
-                            </Button>
-                          )}
-                          {c.dean_sig && (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="h-7 px-2 border-gray-700/60 text-gray-300 hover:bg-gray-900/60"
-                              onClick={() => copy(c.dean_sig!)}
-                            >
-                              <Copy className="h-3.5 w-3.5 mr-1" /> Copy Sig
-                            </Button>
-                          )}
-                        </div>
-                      </motion.div>
-                    ))
-                  )}
-                </AnimatePresence>
+                                <a
+                                  href={c.ipfs_link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  <ExternalLink className="h-3.5 w-3.5 mr-1" />{" "}
+                                  IPFS
+                                </a>
+                              </Button>
+                            )}
+                            {c.dean_sig && (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="h-7 px-2 border-gray-700/60 text-gray-300 hover:bg-gray-900/60"
+                                onClick={() => copy(c.dean_sig!)}
+                              >
+                                <Copy className="h-3.5 w-3.5 mr-1" /> Copy Sig
+                              </Button>
+                            )}
+                          </div>
+                        </motion.div>
+                      ))
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
             </div>
-          </div>
 
-          <DialogFooter className="mt-2">
-            <Button
-              variant="outline"
-              className="border-gray-700/60 text-gray-300 hover:bg-gray-900/60"
-              onClick={() => setOpen(false)}
-            >
-              Close
-            </Button>
-          </DialogFooter>
+            <DialogFooter className="px-6 pb-6">
+              <Button
+                variant="outline"
+                className="border-gray-700/60 text-gray-300 hover:bg-gray-900/60"
+                onClick={() => setOpen(false)}
+              >
+                Close
+              </Button>
+            </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
     </Card>

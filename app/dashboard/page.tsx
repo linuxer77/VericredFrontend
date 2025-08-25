@@ -15,6 +15,7 @@ import AuthGuard from "@/components/auth/auth-guard";
 import { motion } from "framer-motion";
 import { getStoredToken, isJwtValid } from "@/components/auth/jwt";
 import Logo from "@/components/ui/logo";
+import { VerificationSignupModal } from "@/components/home/verification-hub";
 
 interface University {
   id: string;
@@ -63,6 +64,8 @@ export default function StudentDashboard() {
   // New: dashboard API response data to display
   const [dashboardData, setDashboardData] = useState<any | null>(null);
   const [dashboardError, setDashboardError] = useState<string | null>(null);
+  // Reintroduce modal state to show form after CTA click
+  const [showStudentSignup, setShowStudentSignup] = useState(false);
 
   useEffect(() => {
     const init = async () => {
@@ -76,14 +79,8 @@ export default function StudentDashboard() {
         const walletData = JSON.parse(storedWalletRaw);
         setWalletAddress(walletData?.address || null);
 
-        // Do not hydrate profile from localStorage to avoid stale demo names (e.g., "Jane Doe").
-        // Always prefer API data; otherwise show placeholders.
-        // const localUserRaw = localStorage.getItem("vericred_user");
-        // if (localUserRaw) { /* ignored on purpose */ }
-
         const token = getStoredToken();
         if (isJwtValid(token)) {
-          // Mirror the university fetch logic: call the students endpoint with the token
           const res = await fetch(
             "https://erired-harshitg7062-82spdej3.leapcell.dev/students",
             {
@@ -93,7 +90,6 @@ export default function StudentDashboard() {
             }
           );
 
-          // Explicit 404 handling: show CTA instead of redirecting
           if (res.status === 404) {
             setNotFound(true);
             setProfileLoading(false);
@@ -103,19 +99,32 @@ export default function StudentDashboard() {
 
           if (res.ok) {
             const student = await res.json();
-            // Backend may return an object or array; handle both
             const me = Array.isArray(student)
               ? student[0] || {}
               : student || {};
-            setUserProfile({
-              role: me.role || "Individual",
-              first_name: me.first_name,
-              last_name: me.last_name,
-              email: me.email,
-              student_id: me.student_id,
-            });
+            const hasData = Boolean(
+              me &&
+                Object.keys(me).length > 0 &&
+                (me.id || me.first_name || me.email || me.student_id)
+            );
+            if (hasData) {
+              setUserProfile({
+                role: me.role || "Individual",
+                first_name: me.first_name,
+                last_name: me.last_name,
+                email: me.email,
+                student_id: me.student_id,
+              });
+            } else {
+              setNotFound(true);
+            }
           } else {
-            setError(`Failed to load profile: ${res.status}`);
+            // Treat other non-OK statuses as not found for signup UX
+            if (res.status === 401 || res.status === 403) {
+              setError(`Failed to load profile: ${res.status}`);
+            } else {
+              setNotFound(true);
+            }
           }
         }
       } catch (err) {
@@ -218,7 +227,6 @@ export default function StudentDashboard() {
           headers,
         });
 
-        // If dashboard says 404, treat as no student account
         if (res.status === 404) {
           setNotFound(true);
           setDashboardData(null);
@@ -238,11 +246,15 @@ export default function StudentDashboard() {
         if (!res.ok) {
           setDashboardError(`Dashboard fetch failed (${res.status})`);
         }
+        const obj = Array.isArray(json) ? json[0] || {} : json || {};
+        const hasData = Boolean(
+          obj &&
+            Object.keys(obj).length > 0 &&
+            (obj.id || obj.first_name || obj.email || obj.student_id)
+        );
         setDashboardData(json);
 
-        // Use /dashboard response to populate profile summary
-        if (res.ok) {
-          const obj = Array.isArray(json) ? json[0] || {} : json || {};
+        if (res.ok && hasData) {
           setUserProfile((prev) => ({
             role: prev?.role || "Individual",
             first_name: obj.first_name || "",
@@ -250,6 +262,9 @@ export default function StudentDashboard() {
             email: obj.email || "",
             student_id: obj.student_id || "",
           }));
+        } else if (res.ok && !hasData) {
+          // 200 but no actual profile information
+          setNotFound(true);
         }
       } catch (e: any) {
         setDashboardError(e?.message || "Failed to fetch dashboard");
@@ -273,7 +288,7 @@ export default function StudentDashboard() {
     );
   }
 
-  // New: show friendly CTA when no student account exists
+  // Show friendly CTA when no student account exists
   if (notFound) {
     return (
       <AuthGuard>
@@ -303,7 +318,7 @@ export default function StudentDashboard() {
                   <div className="flex flex-wrap items-center justify-center gap-3">
                     <Button
                       className="bg-white text-black hover:bg-gray-100"
-                      onClick={() => (window.location.href = "/home")}
+                      onClick={() => setShowStudentSignup(true)}
                     >
                       Create Student Account
                     </Button>
@@ -318,6 +333,18 @@ export default function StudentDashboard() {
                 </CardContent>
               </Card>
             </motion.div>
+
+            {/* Inline Student Signup Modal (opens on CTA) */}
+            <VerificationSignupModal
+              open={showStudentSignup}
+              mode="student"
+              onClose={() => setShowStudentSignup(false)}
+              onSuccess={() => {
+                if (typeof window !== "undefined") {
+                  window.location.href = "/dashboard";
+                }
+              }}
+            />
           </div>
         </WalletGuard>
       </AuthGuard>

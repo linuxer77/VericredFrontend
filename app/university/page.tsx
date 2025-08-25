@@ -31,6 +31,7 @@ import { motion } from "framer-motion";
 import Logo from "@/components/ui/logo";
 import { getStoredToken } from "@/components/auth/jwt";
 import { useToast } from "@/components/ui/toast";
+import { VerificationSignupModal } from "@/components/home/verification-hub";
 
 // Mock data types
 interface University {
@@ -116,6 +117,8 @@ export default function UniversityDashboard() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   // New: track 404 state
   const [notFound, setNotFound] = useState(false);
+  // New: control modal visibility for inline university signup
+  const [showUniversitySignup, setShowUniversitySignup] = useState(false);
   const [pendingRequests, setPendingRequests] = useState<
     Array<{ student_wallet: string; university_wallet: string; id?: string }>
   >([]);
@@ -649,7 +652,7 @@ export default function UniversityDashboard() {
         {/* Main Content */}
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {notFound && (
-            <div className="min-h-[60vh] flex items-center justify-center mb-6">
+            <div className="min-h-screen flex items-center justify-center px-4">
               <motion.div
                 initial={{ opacity: 0, y: 10, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -674,21 +677,33 @@ export default function UniversityDashboard() {
                     <div className="flex flex-wrap items-center justify-center gap-3">
                       <Button
                         className="bg-white text-black hover:bg-gray-100"
-                        onClick={() => (window.location.href = "/home")}
+                        onClick={() => setShowUniversitySignup(true)}
                       >
                         Create University Account
                       </Button>
                       <Button
                         variant="outline"
                         className="border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white"
-                        onClick={() => (window.location.href = "/home")}
+                        onClick={() => setShowUniversitySignup(true)}
                       >
-                        Go to Home
+                        Start Verification
                       </Button>
                     </div>
                   </CardContent>
                 </Card>
               </motion.div>
+
+              {/* Inline University Signup Modal */}
+              <VerificationSignupModal
+                open={showUniversitySignup}
+                mode="university"
+                onClose={() => setShowUniversitySignup(false)}
+                onSuccess={() => {
+                  if (typeof window !== "undefined") {
+                    window.location.href = "/university";
+                  }
+                }}
+              />
             </div>
           )}
 
