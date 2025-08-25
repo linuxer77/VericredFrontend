@@ -56,9 +56,9 @@ export default function WalletStatus({
 
   return (
     <div className="flex items-center gap-4">
-      <div className="hidden sm:flex items-center gap-2">
+      <div className="hidden sm:flex items-center gap-2 whitespace-nowrap">
         <Wallet className="h-4 w-4 text-green-400" />
-        <span className="text-sm text-gray-300">
+        <span className="text-sm text-gray-300 whitespace-nowrap">
           Connected:{" "}
           <span className="font-mono text-white">
             {formatAddress(userProfile.walletAddress)}
@@ -74,7 +74,7 @@ export default function WalletStatus({
           ) : (
             <Copy className="h-3.5 w-3.5" />
           )}
-          <span className="hidden md:inline">{copied ? "Copied" : "Copy"}</span>
+          <span className="hidden xl:inline">{copied ? "Copied" : "Copy"}</span>
         </button>
         {showRoleBadge && (
           <Badge

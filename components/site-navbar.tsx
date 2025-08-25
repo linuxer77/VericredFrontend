@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import Logo from "@/components/ui/logo";
 import WalletStatus from "@/components/wallet-status";
 import { clearSession } from "@/components/auth/jwt";
+import { Wallet, Copy, Check } from "lucide-react";
 
 export default function SiteNavbar() {
   const pathname = usePathname();
@@ -56,36 +57,75 @@ export default function SiteNavbar() {
 
   // mobile menu state
   const [menuOpen, setMenuOpen] = useState(false);
+  const [copiedMobile, setCopiedMobile] = useState(false);
+
+  const formatAddress = (address: string) => {
+    if (!address) return "";
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  };
+
+  const copyAddressMobile = async () => {
+    if (!userProfile?.walletAddress) return;
+    try {
+      await navigator.clipboard.writeText(userProfile.walletAddress);
+      setCopiedMobile(true);
+      setTimeout(() => setCopiedMobile(false), 1200);
+    } catch (e) {}
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 backdrop-blur supports-[backdrop-filter]:bg-black/30">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center">
         {/* Glass, rounded pill container (landing style) */}
         <div className="w-full rounded-full border border-white/10 bg-white/5 backdrop-blur-md shadow-[0_0_1px_1px_rgba(255,255,255,0.05)] px-3 md:px-4 py-2">
-          <div className="flex justify-between items-center gap-3">
-            {/* Logo (link to home) */}
-            <Link href="/home" className="group flex items-center">
-              <Logo
-                size="md"
-                className="group-hover:scale-105 transition-transform duration-200"
-              />
-            </Link>
+          <div className="grid grid-cols-[1fr_auto] md:grid-cols-3 items-center gap-2">
+            {/* Left: Logo + compact mobile status */}
+            <div className="flex items-center gap-2 min-w-0 justify-self-start">
+              <Link href="/home" className="group flex items-center">
+                <Logo
+                  size="md"
+                  className="group-hover:scale-105 transition-transform duration-200"
+                />
+              </Link>
+              {userProfile && (
+                <div className="md:hidden flex items-center gap-1 text-[11px] sm:text-xs text-gray-300 whitespace-nowrap flex-nowrap shrink-1 max-w-[58vw] overflow-hidden rounded-full border border-white/10 bg-white/5 pl-1.5 pr-1 py-0.5">
+                  <Wallet className="h-3.5 w-3.5 text-green-400 flex-shrink-0" />
+                  <span className="hidden min-[380px]:inline">
+                    Connected:&nbsp;
+                  </span>
+                  <span className="font-mono text-white truncate max-w-[36vw] inline-block align-bottom">
+                    {formatAddress(userProfile.walletAddress)}
+                  </span>
+                  <button
+                    onClick={copyAddressMobile}
+                    title="Copy address"
+                    className="ml-1 inline-flex items-center justify-center rounded-md border border-gray-700 p-1 text-gray-300 hover:bg-gray-800 hover:text-white transition flex-shrink-0"
+                  >
+                    {copiedMobile ? (
+                      <Check className="h-3.5 w-3.5 text-green-400" />
+                    ) : (
+                      <Copy className="h-3.5 w-3.5" />
+                    )}
+                  </button>
+                </div>
+              )}
+            </div>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-1">
+            {/* Desktop Navigation: centered with tight spacing, slightly left shift */}
+            <div className="hidden md:flex items-center gap-1 justify-self-center -translate-x-4 lg:-translate-x-6">
               {links.map((l) => (
                 <Link
                   key={l.href}
                   href={l.href}
-                  className="px-4 py-2 text-sm text-gray-300 hover:text-white rounded-full hover:bg-white/10 transition-all"
+                  className="px-2 py-2 text-sm text-gray-300 hover:text-white rounded-full hover:bg-white/10 transition-all"
                 >
                   {l.label}
                 </Link>
               ))}
             </div>
 
-            {/* Desktop Wallet */}
-            <div className="hidden md:flex items-center gap-3">
+            {/* Desktop Wallet: right aligned with nowrap */}
+            <div className="hidden md:flex items-center gap-3 justify-self-end whitespace-nowrap">
               <WalletStatus
                 userProfile={userProfile}
                 onDisconnect={handleDisconnect}
@@ -93,8 +133,8 @@ export default function SiteNavbar() {
               />
             </div>
 
-            {/* Mobile menu button */}
-            <div className="md:hidden">
+            {/* Mobile menu button: pinned to right on small screens */}
+            <div className="md:hidden justify-self-end">
               <button
                 aria-label={menuOpen ? "Close menu" : "Open menu"}
                 onClick={() => setMenuOpen((s) => !s)}
