@@ -332,7 +332,7 @@ export default function LandingPage() {
           </div>
 
           {/* Right - Animated display */}
-          <div className="flex-1 relative overflow-hidden bg-gradient-to-br from-gray-900 to-black">
+          <div className="flex-1 relative overflow-hidden bg-gradient-to-br from-gray-900 to-black h-64 sm:h-80 md:h-auto">
             {/* Rotating squares */}
             <motion.div
               className="absolute w-12 h-12 border border-gray-700 left-[15%] top-[20%]"

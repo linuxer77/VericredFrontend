@@ -13,6 +13,7 @@ import {
   Share2,
   Eye,
 } from "lucide-react";
+import AddressSearch from "@/components/home/address-search";
 
 export default function ExploreSection() {
   return (
@@ -112,7 +113,7 @@ export default function ExploreSection() {
             </CardContent>
           </Card>
 
-          {/* Right: Tabs with overview and code (sample text removed) */}
+          {/* Right: Tabs + Quick Lookup stacked */}
           <motion.div
             className="lg:col-span-2"
             initial={{ opacity: 0, x: 10 }}
@@ -136,7 +137,6 @@ export default function ExploreSection() {
                     >
                       Overview
                     </TabsTrigger>
-                    {/* Sample Text tab removed */}
                     <TabsTrigger
                       value="code"
                       className="data-[state=active]:bg-gray-800 data-[state=active]:text-white text-gray-400"
@@ -162,8 +162,6 @@ export default function ExploreSection() {
                       <li>Issuer and revocation registries</li>
                     </ul>
                   </TabsContent>
-
-                  {/* Removed Sample Text content */}
 
                   <TabsContent value="code" className="mt-4">
                     <div className="rounded-md border border-gray-800 bg-black p-4 text-xs text-gray-300 overflow-x-auto">
@@ -198,6 +196,11 @@ contract vericredNFT is ERC721URIStorage, Ownable {
                 </Tabs>
               </CardContent>
             </Card>
+
+            {/* Quick Lookup: Search by Address */}
+            <div className="mt-6">
+              <AddressSearch />
+            </div>
           </motion.div>
         </div>
       </div>

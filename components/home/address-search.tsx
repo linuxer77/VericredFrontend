@@ -138,7 +138,7 @@ export default function AddressSearch() {
   const SAMPLE_ADDR = "0x0894556908f344151c0BF6633423274b96D27B8A";
 
   return (
-    <Card className="bg-gradient-to-br from-gray-900/85 to-gray-900/70 border border-gray-800/70">
+    <Card className="bg-gradient-to-br from-gray-900/85 to-gray-900/70 border border-gray-800/70 rounded-2xl shadow-[0_0_0_1px_rgba(255,255,255,0.05)]">
       <CardHeader className="pb-2">
         <CardTitle className="text-white flex items-center gap-2">
           <Search className="h-4 w-4" />
@@ -151,11 +151,11 @@ export default function AddressSearch() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="0x…"
-            className="bg-gray-800/60 border-gray-700/60 text-white placeholder-gray-500"
+            className="h-11 bg-gray-800/60 border-gray-700/60 text-white placeholder-gray-500"
           />
           <Button
             disabled={!isLikelyAddress || loading}
-            className="bg-white text-black hover:bg-gray-100"
+            className="h-11 bg-white text-black hover:bg-gray-100"
             onClick={handleSearch}
           >
             {loading ? "Searching…" : "Search"}
@@ -167,13 +167,15 @@ export default function AddressSearch() {
           <span className="text-xs text-gray-300 font-mono truncate">
             {SAMPLE_ADDR}
           </span>
-          <button
-            className="inline-flex items-center gap-1 rounded-md border border-gray-700 px-2 py-1 text-[11px] text-gray-300 hover:bg-gray-800 hover:text-white transition"
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-7 px-2 border-gray-700/60 text-gray-300 hover:bg-gray-800 hover:text-white"
             onClick={() => copy(SAMPLE_ADDR)}
             title="Copy sample address"
           >
-            <Copy className="h-3.5 w-3.5" /> Copy
-          </button>
+            <Copy className="h-3.5 w-3.5 mr-1" /> Copy
+          </Button>
         </div>
 
         {!isLikelyAddress && query && (
