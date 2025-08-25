@@ -3,7 +3,16 @@
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Code2, Rocket, Landmark, Search, Globe, Sparkles } from "lucide-react";
+import {
+  Code2,
+  Rocket,
+  Sparkles,
+  Wallet,
+  Users,
+  FileCheck,
+  Share2,
+  Eye,
+} from "lucide-react";
 
 export default function ExploreSection() {
   return (
@@ -37,54 +46,73 @@ export default function ExploreSection() {
           </h2>
           <p className="text-gray-400 mt-4">
             Browse the tech, components, and real-world applications of
-            VeriCred. Below you’ll find an overview, sample text, and
-            interactive tabs to learn more about what you can build.
+            VeriCred. Below you’ll find an overview and interactive tabs to
+            learn more about what you can build.
           </p>
         </motion.div>
 
         <div className="mt-10 grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left: Summary cards */}
-          <div className="space-y-4">
-            {[
-              {
-                title: "Verifiable Records",
-                icon: Landmark,
-                text: "Instant credential verification on-chain with transparent audit trails.",
-              },
-              {
-                title: "Global Reach",
-                icon: Globe,
-                text: "Portable credentials you control and share anywhere in the world.",
-              },
-              {
-                title: "Searchable",
-                icon: Search,
-                text: "Quickly find users or universities by address and view status.",
-              },
-            ].map((c, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: -10 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.05 }}
-              >
-                <Card className="bg-gray-900/70 border-gray-800 hover:border-gray-700 transition-colors">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="flex items-center gap-2 text-white">
-                      <c.icon className="h-4 w-4 text-purple-400" />
-                      {c.title}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-sm text-gray-400">
-                    {c.text}
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
+          {/* Left: How it works timeline */}
+          <Card className="bg-gray-900/70 border-gray-800 hover:border-gray-700 transition-colors">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 text-white">
+                <Sparkles className="h-4 w-4 text-purple-400" />
+                How VeriCred Works
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm">
+              <ol className="space-y-5">
+                {[
+                  {
+                    title: "Connect Wallet",
+                    desc: "Use MetaMask to connect and authenticate.",
+                    icon: Wallet,
+                  },
+                  {
+                    title: "Choose Role",
+                    desc: "Select University (issuer), Student (holder), or Verifier.",
+                    icon: Users,
+                  },
+                  {
+                    title: "Issue / Receive Credential",
+                    desc: "Universities mint ERC-721 credentials; students receive them.",
+                    icon: FileCheck,
+                  },
+                  {
+                    title: "Share & Verify",
+                    desc: "Share your credential link; verifiers validate instantly on-chain.",
+                    icon: Share2,
+                  },
+                  {
+                    title: "Public Ledger & Revocation",
+                    desc: "Activity appears on the public ledger; issuers can revoke if needed.",
+                    icon: Eye,
+                  },
+                ].map((s, i, arr) => (
+                  <li key={i} className="relative pl-10">
+                    {/* number badge */}
+                    <span className="absolute left-0 top-0 flex h-7 w-7 items-center justify-center rounded-full border border-purple-500/40 bg-purple-500/15 text-purple-300 text-xs font-medium">
+                      {i + 1}
+                    </span>
+                    {/* connector line */}
+                    {i < arr.length - 1 && (
+                      <span
+                        className="absolute left-[13px] top-7 h-[calc(100%-1.25rem)] w-px bg-gray-800"
+                        aria-hidden="true"
+                      />
+                    )}
+                    <div className="flex items-center gap-2 text-white">
+                      <s.icon className="h-4 w-4 text-purple-400" />
+                      <span className="font-medium">{s.title}</span>
+                    </div>
+                    <p className="text-gray-400 mt-1">{s.desc}</p>
+                  </li>
+                ))}
+              </ol>
+            </CardContent>
+          </Card>
 
-          {/* Right: Tabs with sample text and code */}
+          {/* Right: Tabs with overview and code (sample text removed) */}
           <motion.div
             className="lg:col-span-2"
             initial={{ opacity: 0, x: 10 }}
@@ -108,12 +136,7 @@ export default function ExploreSection() {
                     >
                       Overview
                     </TabsTrigger>
-                    <TabsTrigger
-                      value="sample"
-                      className="data-[state=active]:bg-gray-800 data-[state=active]:text-white text-gray-400"
-                    >
-                      Sample Text
-                    </TabsTrigger>
+                    {/* Sample Text tab removed */}
                     <TabsTrigger
                       value="code"
                       className="data-[state=active]:bg-gray-800 data-[state=active]:text-white text-gray-400"
@@ -140,33 +163,7 @@ export default function ExploreSection() {
                     </ul>
                   </TabsContent>
 
-                  <TabsContent
-                    value="sample"
-                    className="mt-4 text-gray-300 space-y-3"
-                  >
-                    <p>
-                      VeriCred: Decentralized Digital Credentials — VeriCred is
-                      a cutting-edge platform revolutionizing academic and
-                      professional credentialing. It leverages blockchain
-                      technology (ERC-721 NFTs on Ethereum — Sepolia testnet
-                      now; mainnet later) for secure, transparent, and instantly
-                      verifiable digital records of achievements, empowering
-                      individuals and streamlining processes for institutions
-                      and verifiers.
-                    </p>
-                    <p className="text-gray-400">
-                      Key Features & Benefits: Forgery-Proof Credentials,
-                      Instant & Global Verification, Individual Ownership,
-                      Reduced Admin Burden, Enhanced Portability.
-                    </p>
-                    <p className="text-gray-400">
-                      Technology Stack — Blockchain: Ethereum (Sepolia now;
-                      mainnet later). Smart Contracts: Solidity (ERC-721,
-                      IssuerRegistry, RevocationRegistry). Backend: Golang.
-                      Frontend: React / Next.js. Database: PostgreSQL. Storage:
-                      IPFS / Pinata. Wallets: MetaMask, WalletConnect.
-                    </p>
-                  </TabsContent>
+                  {/* Removed Sample Text content */}
 
                   <TabsContent value="code" className="mt-4">
                     <div className="rounded-md border border-gray-800 bg-black p-4 text-xs text-gray-300 overflow-x-auto">
