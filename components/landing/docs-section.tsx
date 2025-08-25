@@ -156,7 +156,7 @@ export default function DocsSection() {
               {
                 title: "Storage",
                 icon: Cloud,
-                items: ["IPFS / Pinata"],
+                items: ["IPFS / Pinata", "Postgresql"],
               },
               {
                 title: "Wallets",
