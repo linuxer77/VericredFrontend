@@ -135,6 +135,8 @@ export default function AddressSearch() {
     return isNaN(d.getTime()) ? s : d.toLocaleDateString();
   };
 
+  const SAMPLE_ADDR = "0x0894556908f344151c0BF6633423274b96D27B8A";
+
   return (
     <Card className="bg-gradient-to-br from-gray-900/85 to-gray-900/70 border border-gray-800/70">
       <CardHeader className="pb-2">
@@ -159,6 +161,21 @@ export default function AddressSearch() {
             {loading ? "Searching…" : "Search"}
           </Button>
         </div>
+
+        {/* Sample address helper */}
+        <div className="flex items-center justify-between gap-2 rounded-md border border-gray-800 bg-gray-900/60 px-3 py-2">
+          <span className="text-xs text-gray-300 font-mono truncate">
+            {SAMPLE_ADDR}
+          </span>
+          <button
+            className="inline-flex items-center gap-1 rounded-md border border-gray-700 px-2 py-1 text-[11px] text-gray-300 hover:bg-gray-800 hover:text-white transition"
+            onClick={() => copy(SAMPLE_ADDR)}
+            title="Copy sample address"
+          >
+            <Copy className="h-3.5 w-3.5" /> Copy
+          </button>
+        </div>
+
         {!isLikelyAddress && query && (
           <p className="text-xs text-gray-500">
             Enter a valid address starting with 0x

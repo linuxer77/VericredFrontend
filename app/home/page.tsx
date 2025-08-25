@@ -10,7 +10,9 @@ import {
   ShieldCheck,
   LayoutDashboard,
   Share2,
+  Droplets,
 } from "lucide-react";
+import Link from "next/link";
 
 type VerificationStatus = "unverified" | "pending" | "verified";
 interface UserProfile {
@@ -109,9 +111,6 @@ export default function HomePage() {
               <h2 className="text-xl font-semibold text-white">
                 How the site works
               </h2>
-              <p className="text-gray-400 text-sm mt-1">
-                Simple steps. No jargon.
-              </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {/* Step 1 */}
@@ -181,6 +180,37 @@ export default function HomePage() {
                   View on the public ledger. Share with anyone.
                 </p>
               </motion.div>
+            </div>
+          </motion.section>
+
+          {/* Test faucet info */}
+          <motion.section
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, delay: 0.1 }}
+            className="max-w-3xl mx-auto"
+          >
+            <div className="rounded-xl border border-gray-800/60 bg-gradient-to-br from-gray-900/90 via-black/80 to-purple-900/20 backdrop-blur-xl p-5 shadow-2xl">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-xl bg-purple-600/20 border border-purple-700/40 flex items-center justify-center">
+                  <Droplets className="h-5 w-5 text-purple-300" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-white text-sm font-medium">
+                    Need Sepolia test ETH?
+                  </h3>
+                  <p className="text-gray-400 text-xs mt-1">
+                    Use Google Cloud’s faucet to fund your wallet on Sepolia.
+                  </p>
+                  <Link
+                    href="https://cloud.google.com/application/web3/faucet/ethereum/sepolia"
+                    target="_blank"
+                    className="inline-flex items-center gap-2 mt-3 text-sm font-medium text-black bg-white hover:bg-gray-100 rounded-md px-3 py-1.5"
+                  >
+                    Get Sepolia ETH
+                  </Link>
+                </div>
+              </div>
             </div>
           </motion.section>
         </main>

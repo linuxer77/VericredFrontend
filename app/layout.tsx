@@ -13,9 +13,9 @@ export const metadata: Metadata = {
   generator: "VeriCred",
   // Add SVG favicon for the tab icon
   icons: {
-    icon: "/placeholder-logo.svg",
-    shortcut: "/placeholder-logo.svg",
-    apple: "/placeholder-logo.svg",
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
   },
 };
 
