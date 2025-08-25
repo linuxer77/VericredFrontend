@@ -88,18 +88,18 @@ export default function SiteNavbar() {
                 />
               </Link>
               {userProfile && (
-                <div className="md:hidden flex items-center gap-1 text-[11px] sm:text-xs text-gray-300 whitespace-nowrap flex-nowrap shrink-1 max-w-[58vw] overflow-hidden rounded-full border border-white/10 bg-white/5 pl-1.5 pr-1 py-0.5">
+                <div className="md:hidden flex items-center gap-1 text-[10px] min-[360px]:text-[11px] sm:text-xs text-gray-300 whitespace-nowrap flex-nowrap shrink min-w-0 max-w-[60vw] overflow-hidden rounded-full border border-white/10 bg-white/5 pl-1 pr-1 py-0.5">
                   <Wallet className="h-3.5 w-3.5 text-green-400 flex-shrink-0" />
-                  <span className="hidden min-[380px]:inline">
+                  <span className="hidden min-[420px]:inline">
                     Connected:&nbsp;
                   </span>
-                  <span className="font-mono text-white truncate max-w-[36vw] inline-block align-bottom">
+                  <span className="font-mono text-white truncate max-w-[34vw] min-[420px]:max-w-[38vw] inline-block align-bottom">
                     {formatAddress(userProfile.walletAddress)}
                   </span>
                   <button
                     onClick={copyAddressMobile}
                     title="Copy address"
-                    className="ml-1 inline-flex items-center justify-center rounded-md border border-gray-700 p-1 text-gray-300 hover:bg-gray-800 hover:text-white transition flex-shrink-0"
+                    className="ml-1 inline-flex items-center justify-center rounded-md border border-gray-700 p-1 min-[360px]:p-1 text-gray-300 hover:bg-gray-800 hover:text-white transition flex-shrink-0"
                   >
                     {copiedMobile ? (
                       <Check className="h-3.5 w-3.5 text-green-400" />
@@ -111,8 +111,8 @@ export default function SiteNavbar() {
               )}
             </div>
 
-            {/* Desktop Navigation: centered with tight spacing, slightly left shift */}
-            <div className="hidden md:flex items-center gap-1 justify-self-center -translate-x-4 lg:-translate-x-6">
+            {/* Desktop Navigation: centered with tight spacing, slightly left shift and no wrap */}
+            <div className="hidden md:flex items-center gap-1 justify-self-center -translate-x-4 lg:-translate-x-6 whitespace-nowrap">
               {links.map((l) => (
                 <Link
                   key={l.href}

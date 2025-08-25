@@ -201,12 +201,7 @@ export default function DocsSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-        >
-          <Button className="bg-white text-black hover:bg-gray-100">
-            Get Started Guide
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </motion.div>
+        ></motion.div>
       </div>
     </section>
   );
