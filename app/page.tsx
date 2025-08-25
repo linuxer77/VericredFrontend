@@ -24,10 +24,12 @@ import {
   saveWalletSession,
 } from "@/components/auth/jwt";
 import Logo from "@/components/ui/logo";
+import LogoReveal from "@/components/ui/logo-reveal";
 
 export default function LandingPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isConnecting, setIsConnecting] = useState(false);
+  const [showReveal, setShowReveal] = useState(false);
   const router = useRouter();
 
   // Redirect to /home if a valid JWT exists
@@ -119,8 +121,9 @@ export default function LandingPage() {
         token,
       });
 
-      alert("MetaMask connected and authenticated successfully!");
-      router.replace("/home");
+      // Show logo reveal, then redirect
+      setShowReveal(true);
+      setTimeout(() => router.replace("/home"), 1400);
     } catch (error: any) {
       console.error("Failed to connect wallet:", error);
       if (error?.code === 4001) {
@@ -141,6 +144,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-black text-white scroll-smooth">
+      {showReveal && <LogoReveal onComplete={() => setShowReveal(false)} />}
       {/* Navbar */}
       <header className="sticky top-0 z-50 border-b border-white/10 backdrop-blur supports-[backdrop-filter]:bg-black/30">
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center">
