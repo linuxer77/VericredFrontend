@@ -67,12 +67,17 @@ export default function LogoReveal({
             // Short hold then fade out via parent AnimatePresence timeout
             setTimeout(() => onComplete?.(), 600);
           }}
-          className="relative z-10 scale-95 sm:scale-100"
+          className="relative z-10 scale-90 sm:scale-100 px-4 sm:px-0 max-w-[92vw]"
         >
-          <Logo size="lg" showText={false} />
+          {/* Show logo + brand text, stack on mobile, inline on larger screens */}
+          <Logo
+            size="lg"
+            showText
+            className="flex-col sm:flex-row gap-3 sm:gap-2 text-center sm:text-left text-white"
+          />
           {/* Shine sweep */}
           <motion.div
-            className="absolute inset-0 rounded-xl"
+            className="pointer-events-none absolute inset-0 rounded-xl"
             initial={{ x: "-120%", opacity: 0.0 }}
             animate={{ x: ["-120%", "120%"], opacity: [0.0, 0.3, 0.0] }}
             transition={{ duration: 0.9, ease: "easeInOut", delay: 0.25 }}
