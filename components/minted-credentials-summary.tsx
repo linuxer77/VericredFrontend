@@ -798,57 +798,64 @@ export default function MintedCredentialsSummary({
                           </div>
                         </div>
 
-                        {Array.isArray(ipfsData?.attributes) && (
-                          <div className="p-4 rounded-xl bg-gradient-to-br from-gray-900/85 to-gray-900/75 border border-gray-800 text-sm">
-                            <AnimatePresence initial={false}>
-                              {additionalOpen && (
-                                <motion.div
-                                  initial={{ height: 0, opacity: 0 }}
-                                  animate={{ height: "auto", opacity: 1 }}
-                                  exit={{ height: 0, opacity: 0 }}
-                                  transition={{ duration: 0.2 }}
-                                  className="overflow-hidden"
-                                >
-                                  <div className="mt-3 space-y-2 text-sm text-gray-300 max-h-40 overflow-auto pr-1">
-                                    {ipfsData.attributes
-                                      .filter((a: any) => {
-                                        const k = a?.trait_type || a?.traitType;
-                                        const known = [
-                                          "Credential Type",
-                                          "Issuing Institution",
-                                          "Issuer Wallet",
-                                          "Recipient Name",
-                                          "Recipient Wallet",
-                                          "Issue Date",
-                                          "Graduation Date",
-                                          "Major",
-                                          "GPA",
-                                          "Credential ID",
-                                          "Accreditation Body",
-                                        ];
-                                        return k && !known.includes(k);
-                                      })
-                                      .map((a: any, idx: number) => (
-                                        <div
-                                          key={`${
-                                            a?.trait_type || a?.traitType
-                                          }-${idx}`}
-                                          className="flex items-start gap-2"
-                                        >
-                                          <div className="text-xs text-gray-400 w-36">
-                                            {a?.trait_type || a?.traitType}
+                        {/* Only render additional attributes container when open and available to avoid blank spacing */}
+                        {Array.isArray(ipfsData?.attributes) &&
+                          (() => {
+                            const known = [
+                              "Credential Type",
+                              "Issuing Institution",
+                              "Issuer Wallet",
+                              "Recipient Name",
+                              "Recipient Wallet",
+                              "Issue Date",
+                              "Graduation Date",
+                              "Major",
+                              "GPA",
+                              "Credential ID",
+                              "Accreditation Body",
+                            ];
+                            const extra = ipfsData!.attributes.filter(
+                              (a: any) => {
+                                const k = a?.trait_type || a?.traitType;
+                                return k && !known.includes(k);
+                              }
+                            );
+                            if (!additionalOpen || extra.length === 0)
+                              return null;
+                            return (
+                              <div className="p-4 rounded-xl bg-gradient-to-br from-gray-900/85 to-gray-900/75 border border-gray-800 text-sm">
+                                <AnimatePresence initial={false}>
+                                  {additionalOpen && (
+                                    <motion.div
+                                      initial={{ height: 0, opacity: 0 }}
+                                      animate={{ height: "auto", opacity: 1 }}
+                                      exit={{ height: 0, opacity: 0 }}
+                                      transition={{ duration: 0.2 }}
+                                      className="overflow-hidden"
+                                    >
+                                      <div className="mt-3 space-y-2 text-sm text-gray-300 max-h-40 overflow-auto pr-1">
+                                        {extra.map((a: any, idx: number) => (
+                                          <div
+                                            key={`${
+                                              a?.trait_type || a?.traitType
+                                            }-${idx}`}
+                                            className="flex items-start gap-2"
+                                          >
+                                            <div className="text-xs text-gray-400 w-36">
+                                              {a?.trait_type || a?.traitType}
+                                            </div>
+                                            <div className="text-sm text-white break-words">
+                                              {String(a?.value ?? "—")}
+                                            </div>
                                           </div>
-                                          <div className="text-sm text-white break-words">
-                                            {String(a?.value ?? "—")}
-                                          </div>
-                                        </div>
-                                      ))}
-                                  </div>
-                                </motion.div>
-                              )}
-                            </AnimatePresence>
-                          </div>
-                        )}
+                                        ))}
+                                      </div>
+                                    </motion.div>
+                                  )}
+                                </AnimatePresence>
+                              </div>
+                            );
+                          })()}
                       </div>
                     </div>
                   )}

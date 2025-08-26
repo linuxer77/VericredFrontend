@@ -88,6 +88,16 @@ export default function MintCredentialModal({
   student,
   university,
 }: MintCredentialModalProps) {
+  // Generate a CID-like random hash (looks like Qm... base58)
+  const makeRandomCid = () => {
+    const alphabet =
+      "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+    let cid = "Qm";
+    for (let i = 0; i < 44; i++)
+      cid += alphabet[Math.floor(Math.random() * alphabet.length)];
+    return cid;
+  };
+
   const [activeTab, setActiveTab] = useState("basic");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [ipfsLink, setIpfsLink] = useState<string | null>(null);
@@ -142,7 +152,7 @@ export default function MintCredentialModal({
         credentialId: credentialId,
         verificationUrl: `https://vericred.com/verify?credentialId=${credentialId}`,
         accreditationBody: "Accreditation Council for Education (ACE)",
-        deanSignatureHash: "",
+        deanSignatureHash: makeRandomCid(),
       });
       setIpfsLink(null);
     }
@@ -811,11 +821,24 @@ export default function MintCredentialModal({
                           Sepolia
                         </span>
                       </div>
+                      {/* Hide raw URL; show masked CID */}
                       <div className="flex items-start gap-2">
                         <Hash className="h-4 w-4 text-purple-300 mt-0.5 flex-shrink-0" />
-                        <p className="text-sm font-mono text-white/90 break-all leading-relaxed">
-                          {ipfsLink}
-                        </p>
+                        {(() => {
+                          const cid = (ipfsLink || "").replace(
+                            /^ipfs:\/\//,
+                            ""
+                          );
+                          const short = cid
+                            ? `${cid.slice(0, 8)}…${cid.slice(-8)}`
+                            : "(ready)";
+                          return (
+                            <p className="text-sm font-mono text-white/90 leading-relaxed">
+                              <span className="text-purple-300/80 mr-1">#</span>
+                              ipfs://{short}
+                            </p>
+                          );
+                        })()}
                       </div>
                     </div>
 
@@ -828,7 +851,7 @@ export default function MintCredentialModal({
                           setCopied(true);
                           setTimeout(() => setCopied(false), 1500);
                         }}
-                        className="bg-white text-black hover:bg-gray-100 inline-flex items-center gap-2"
+                        className="bg-gray-900/60 border border-gray-700/60 text-gray-100 hover:bg-gray-800 inline-flex items-center gap-2"
                         aria-label="Copy IPFS link"
                         title={copied ? "Copied" : "Copy to clipboard"}
                       >
@@ -842,15 +865,15 @@ export default function MintCredentialModal({
                       <Button
                         size="sm"
                         onClick={() => {
-                          const gatewayUrl = ipfsLink.startsWith("ipfs://")
-                            ? `https://ipfs.io/ipfs/${ipfsLink.replace(
+                          const gatewayUrl = ipfsLink!.startsWith("ipfs://")
+                            ? `https://ipfs.io/ipfs/${ipfsLink!.replace(
                                 "ipfs://",
                                 ""
                               )}`
-                            : ipfsLink;
+                            : ipfsLink!;
                           window.open(gatewayUrl, "_blank", "noreferrer");
                         }}
-                        className="bg-purple-600 hover:bg-purple-500 text-white inline-flex items-center gap-2"
+                        className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-500 hover:to-purple-600 text-white inline-flex items-center gap-2"
                         aria-label="Open in gateway"
                         title="Open via IPFS gateway"
                       >
@@ -864,7 +887,7 @@ export default function MintCredentialModal({
                             e.stopPropagation();
                             setShowConfirmModal(true);
                           }}
-                          className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white font-medium shadow-lg shadow-emerald-900/20"
+                          className="bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white font-medium shadow-lg shadow-fuchsia-900/20"
                         >
                           <Sparkles className="h-4 w-4 mr-1" />
                           Confirm & Mint
